@@ -43,6 +43,7 @@ export default function Login({
         emailRedirectTo: `${origin}/auth/callback`,
       },
     });
+    console.log(error);
 
     if (error) {
       return redirect("/login?message=Could not authenticate user");
