@@ -1,6 +1,6 @@
 // pages/SurveyPage.tsx
 "use client"; // This is a client component 👈🏽
-
+// pages/SurveyPage.tsx
 import React, { useState } from 'react';
 
 interface FormData {
@@ -25,10 +25,19 @@ const SurveyPage: React.FC = () => {
   };
 
   const handleValueChange = (value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      values: prev.values.includes(value) ? prev.values.filter(item => item !== value) : [...prev.values, value]
-    }));
+    setFormData(prev => {
+      const alreadySelected = prev.values.includes(value);
+      const numSelected = prev.values.length;
+
+      if (!alreadySelected && numSelected >= 3) {
+        return prev;  // Ignore new selections if three are already selected
+      }
+
+      return {
+        ...prev,
+        values: alreadySelected ? prev.values.filter(item => item !== value) : [...prev.values, value]
+      };
+    });
   };
 
   const handleActivityChange = (activity: string) => {
