@@ -1,20 +1,31 @@
 // pages/SurveyPage.tsx
-"use client"; // This is a client component 👈🏽
+"use client"; // This is a client component 👈🏽// pages/SurveyPage.tsx
 // pages/SurveyPage.tsx
 import React, { useState } from 'react';
 
 interface FormData {
   values: string[];
   activities: string[];
-  groupActivities: string[];
+  groupActivitiesRankings: { [key: string]: number };
   excitementLevel: number;
 }
+
+const groupActivities = [
+  "Casual soccer match", 
+  "Super Smash Bros & Mario Kart Tournament", 
+  "Board Game Nights", 
+  "Group Hikes", 
+  "Rock Climbing", 
+  "Cooking Classes", 
+  "Wine & Cheese Night", 
+  "Volunteering"
+];
 
 const SurveyPage: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     values: [],
     activities: [],
-    groupActivities: [],
+    groupActivitiesRankings: groupActivities.reduce((acc, activity) => ({ ...acc, [activity]: 0 }), {}),
     excitementLevel: 3
   });
 
@@ -30,7 +41,8 @@ const SurveyPage: React.FC = () => {
       const numSelected = prev.values.length;
 
       if (!alreadySelected && numSelected >= 3) {
-        return prev;  // Ignore new selections if three are already selected
+        alert("You can select only up to three values.");
+        return prev; // Do not add more if three are already selected
       }
 
       return {
@@ -47,10 +59,13 @@ const SurveyPage: React.FC = () => {
     }));
   };
 
-  const handleGroupActivityChange = (activity: string) => {
+  const handleGroupActivityRankChange = (activity: string, rank: number) => {
     setFormData(prev => ({
       ...prev,
-      groupActivities: prev.groupActivities.includes(activity) ? prev.groupActivities.filter(item => item !== activity) : [...prev.groupActivities, activity]
+      groupActivitiesRankings: {
+        ...prev.groupActivitiesRankings,
+        [activity]: rank
+      }
     }));
   };
 
@@ -91,16 +106,23 @@ const SurveyPage: React.FC = () => {
           ))}
         </div>
         <div>
-          <h2>What type of group activities interest you? (Rank these options)</h2>
-          {["Casual soccer match", "Super Smash Bros & Mario Kart Tournament", "Board Game Nights", "Group Hikes", "Rock Climbing", "Cooking Classes", "Wine & Cheese Night", "Volunteering"].map(activity => (
-            <label key={activity}>
-              <input
-                type="checkbox"
-                checked={formData.groupActivities.includes(activity)}
-                onChange={() => handleGroupActivityChange(activity)}
-              />
-              {activity}
-            </label>
+          <h2>What type of group activities interest you? (Please rank these options)</h2>
+          {groupActivities.map((activity, index) => (
+            <div key={activity}>
+              <label>
+                {activity}: 
+                <select
+                  value={formData.groupActivitiesRankings[activity]}
+                  onChange={(e) => handleGroupActivityRankChange(activity, Number(e.target.value))}
+                  style={{ color: 'black' }}  // Ensure the dropdown text is visible
+                >
+                  <option value={0}>Select rank</option>
+                  {Array.from({ length: groupActivities.length }, (_, i) => i + 1).map(rank => (
+                    <option key={rank} value={rank}>{rank}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
           ))}
         </div>
         <div>
