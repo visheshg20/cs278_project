@@ -25,7 +25,7 @@ export default function Login({
       return redirect("/login?message=Could not authenticate user");
     }
 
-    return redirect("/protected");
+    return redirect("/home");
   };
 
   const signUp = async (formData: FormData) => {
@@ -36,17 +36,37 @@ export default function Login({
     const password = formData.get("password") as string;
     const supabase = createClient();
 
-    const { error } = await supabase.auth.signUp({
+    const email_domain = email.split("@").pop();
+    if (email_domain !== "stanford.edu") {
+      return redirect("/login?message=Only stanford.edu accounts are allowed");
+    }
+
+    const { error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: `${origin}/auth/callback`,
       },
     });
-    console.log(error);
+    console.log(authError);
 
-    if (error) {
+    if (authError) {
+      console.log(authError);
       return redirect("/login?message=Could not authenticate user");
+    }
+
+    const { error: userCreationError } = await supabase.from("Users").insert({
+      email: email,
+      nickname: null,
+      student_status: null,
+      groups: null,
+      status: 1,
+      school_name: "Stanford University",
+    });
+
+    if (userCreationError) {
+      console.log(userCreationError);
+      return redirect("/login?message=Could not create new user");
     }
 
     return redirect("/login?message=Check email to continue sign in process");
