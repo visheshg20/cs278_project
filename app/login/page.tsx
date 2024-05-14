@@ -36,19 +36,31 @@ export default function Login({
     const password = formData.get("password") as string;
     const supabase = createClient();
 
-    const { error } = await supabase.auth.signUp({
+  // Attempt to sign up using Supabase auth
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
       options: {
         emailRedirectTo: `${origin}/auth/callback`,
       },
-    });
-    console.log(error);
+  });
 
-    if (error) {
+    if (signUpError) {
       return redirect("/login?message=Could not authenticate user");
     }
+    const userId = signUpData.user?.id;
 
+    if (userId) {
+      const { error: insertError } = await supabase
+        .from("users")
+        .insert({ uid: userId, email });
+  
+      if (insertError) {
+        console.error("Error inserting user data:", insertError);
+        // Handle the error appropriately (e.g., show an error message)
+      }
+    }
+  
     return redirect("/login?message=Check email to continue sign in process");
   };
 
