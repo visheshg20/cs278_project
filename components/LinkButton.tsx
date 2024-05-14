@@ -17,7 +17,7 @@ const LinkButton: React.FC<LinkButtonProps> = ({
   return (
     <Link
       href={href}
-      className="text-[#8A6697] bg-white text-center flex items-center justify-center px-4 py-2 text-xl rounded-xl no-underline hover:bg-btn-background-hover"
+      className="text-[#8A6697] bg-white text-center flex items-center justify-center px-4 py-2 text-md rounded-xl no-underline hover:shadow-[0_0px_10px_rgb(255,0,255)] transition duration-250"
     >
       {children}
     </Link>
