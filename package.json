@@ -16,9 +16,7 @@
     "autoprefixer": "10.4.17",
     "clsx": "^2.1.1",
     "geist": "^1.2.1",
-    "install": "^0.13.0",
     "next": "latest",
-    "npm": "^10.7.0",
     "postcss": "8.4.33",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -31,6 +29,9 @@
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
     "encoding": "^0.1.13",
+    "eslint": "^9.2.0",
+    "install": "^0.13.0",
+    "npm": "^10.7.0",
     "prisma": "^5.13.0",
     "supabase": "^1.165.0"
   }
