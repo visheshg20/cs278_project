@@ -31,7 +31,7 @@ export default async function FlocksPage() {
     .select()
     .in("gid", userData[0].groups);
 
-  // console.log(groupsData);
+  console.log(groupsData);
 
   const allMembers = groupsData
     ?.reduce((acc, group) => [...acc, ...group.members], [])
@@ -66,22 +66,39 @@ export default async function FlocksPage() {
         <hr className="border-black" />
         <div className="">
           {groupsData.map((group, index: number) => (
-            <div className="flex w-full justify-around">
-              <div className="flex">
-                <div className="bg-purple-300 flex justify-center items-center w-24	h-24 text-4xl rounded-full">
-                  {emojiMap[group.hobby]}
+            <div className="w-full">
+              <div className="flex w-full justify-between">
+                <div className="flex gap-4">
+                  <div className="bg-purple-300 flex justify-center items-center w-24	h-24 text-4xl rounded-full">
+                    {emojiMap[group.hobby]}
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    <h3 className="font-bold text-black text-2xl">
+                      {group.groupName}
+                    </h3>
+                    <div className="flex gap-4">
+                      {Object.keys(membersMap)
+                        .filter((member) => group.members.includes(member))
+                        .map((member) => (
+                          <ProfileImage userInfo={membersMap[member]} />
+                        ))}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="font-bold text-black text-2xl">
-                    {group.groupName}
-                  </h3>
-                  {Object.keys(membersMap)
-                    .filter((member) => group.members.includes(member))
-                    .map((member) => (
-                      <ProfileImage userInfo={membersMap[member]} />
-                    ))}
+                <div className="flex flex-col gap-2">
+                  <div>
+                    Matched:{" "}
+                    {new Date(group.created_at).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </div>
+                  <div>In Common: {group.hobby}</div>
+                  <div>Met Yet?: {group.haveMet ? "Yes!" : "No"}</div>
                 </div>
               </div>
+
+              <hr className="border-black m-5" />
             </div>
           ))}
         </div>
