@@ -2,21 +2,23 @@ import { createClient } from "@/utils/supabase/server";
 import React from "react";
 import Image from "next/image";
 
-// interface ProfileImageProps {
-//   imageUrl: string;
-//   altText: string;
-// }
+interface ProfileImageProps {
+  userInfo?: { firstName: string; lastName: string; profilePicture?: string };
+}
 
-const ProfileImage: React.FC = async ({}) => {
-  const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const { data: userData, error } = await supabase
-    .from("Users")
-    .select()
-    .eq("uid", user?.id);
-  const userObj = userData?.[0];
+const ProfileImage: React.FC<ProfileImageProps> = async ({ userInfo }) => {
+  let userObj = userInfo;
+  if (!userInfo) {
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const { data: userData, error } = await supabase
+      .from("Users")
+      .select()
+      .eq("uid", user?.id);
+    userObj = userData?.[0];
+  }
   if (!userObj) return;
   return (
     <>
