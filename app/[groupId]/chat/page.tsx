@@ -4,26 +4,21 @@ import LinkButton from "@/components/LinkButton";
 import { createClient } from "@/utils/supabase/client";
 import { data } from "autoprefixer";
 import { redirect } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { use, useContext, useEffect, useState } from "react";
 import { type User } from "@supabase/supabase-js";
 import { group } from "console";
 import ProfileImage from "@/components/ProfileImage";
 import { cn } from "@/utils";
+import { AuthContext } from "@/app/contexts/AuthContext";
 
 export default function ChatPage({ params }: { params: { groupId: string } }) {
   const supabase = createClient();
 
-  const [user, setUser] = useState(null);
+  const { user } = useContext(AuthContext);
+
   const [groupData, setGroupData] = useState(null);
   const [chats, setChats] = useState([]);
   const [text, setText] = useState("");
-
-  useEffect(() => {
-    supabase.auth.getUser().then((res) => {
-      console.log(res.data.user);
-      setUser(res.data.user);
-    });
-  }, []);
 
   useEffect(() => {
     supabase
