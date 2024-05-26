@@ -18,7 +18,7 @@ export const AuthContext = createContext<{
 });
 
 // Create a provider component
-export const AuthProvider = ({ children }: { children: JSX.Element }) => {
+export const AuthProvider = async ({ children }: { children: JSX.Element }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<User | null>(null);
 

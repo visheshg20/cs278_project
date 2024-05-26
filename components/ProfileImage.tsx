@@ -1,40 +1,37 @@
-import { createClient } from "@/utils/supabase/server";
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import { User } from "@supabase/supabase-js";
+import { cn } from "@/utils";
 
 interface ProfileImageProps {
   userInfo?:
     | { firstName: string; lastName: string; profilePicture?: string }
     | User
     | null;
+  type?: "sm" | "md";
 }
 
-const ProfileImage: React.FC<ProfileImageProps> = async ({ userInfo }) => {
-  let userObj = userInfo;
-  if (!userInfo) {
-    const supabase = createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    const { data: userData, error } = await supabase
-      .from("Users")
-      .select()
-      .eq("uid", user?.id);
-    userObj = userData?.[0];
-  }
-  if (!userObj) return;
+const ProfileImage: React.FC<ProfileImageProps> = ({ user, type = "md" }) => {
   return (
     <>
-      {userObj.profilePicture ? (
-        <div className="w-6 h-6 rounded-full">
-          <Image src={userObj.profilePicture} alt="" fill />
+      {user.profilePicture ? (
+        <div
+          className={cn(type === "md" ? "w-6 h-6" : "w-4 h-4", "rounded-full")}
+        >
+          <Image src={user.profilePicture} alt="" fill />
         </div>
       ) : (
-        <div className="w-6 h-6 rounded-full bg-[#bbb] p-5 flex justify-center items-center">
-          <span className="text-md">
-            {userObj.firstName[0]}
-            {userObj.lastName[0]}
+        <div
+          className={cn(
+            type === "md" ? "w-6 h-6 p-5 text-md" : "w-4 h-4 text-sm p-4",
+            "rounded-full bg-[#bbb]  flex justify-center items-center"
+          )}
+        >
+          <span className="">
+            {user.firstName[0]}
+            {user.lastName[0]}
           </span>
         </div>
       )}

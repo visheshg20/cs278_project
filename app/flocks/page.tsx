@@ -86,7 +86,7 @@ export default async function FlocksPage() {
                         .filter((member) => group.members.includes(member))
                         .map((member, index) => (
                           <ProfileImage
-                            userInfo={membersMap[member]}
+                            user={membersMap[member]}
                             key={`${group.gid}-${member}-${index}`}
                           />
                         ))}

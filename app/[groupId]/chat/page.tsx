@@ -2,20 +2,19 @@
 
 import AuthButton from "@/components/AuthButton";
 import LinkButton from "@/components/LinkButton";
-import ProfileImage from "@/components/ProfileImage";
 import { createClient } from "@/utils/supabase/client";
 import { data } from "autoprefixer";
 import { redirect } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import { type User } from "@supabase/supabase-js";
 import { group } from "console";
+import ProfileImage from "@/components/ProfileImage";
+import { cn } from "@/utils";
 
 export default function ChatPage({ params }: { params: { groupId: string } }) {
   const supabase = createClient();
 
   const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState(null);
-  const [membersData, setMembersData] = useState(null);
   const [groupData, setGroupData] = useState(null);
   const [chats, setChats] = useState([]);
   const [text, setText] = useState("");
@@ -25,22 +24,37 @@ export default function ChatPage({ params }: { params: { groupId: string } }) {
       console.log(res.data.user);
       setUser(res.data.user);
     });
+    const changes = supabase
+      .channel("schema-db-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT", // Listen only to INSERTs
+          schema: "public",
+          table: "Chats",
+        },
+        (payload) => {
+          console.log(payload);
+          setChats([...chats, payload.new]);
+        }
+      )
+      .subscribe();
   }, []);
 
-  useEffect(() => {
-    if (!user || userData) return;
-    supabase
-      .from("Users")
-      .select()
-      .eq("uid", user.id)
-      .then(({ data: userData, error }) => {
-        if (error) {
-          console.error(error);
-          return;
-        }
-        setUserData(userData[0]);
-      });
-  }, [user]);
+  // useEffect(() => {
+  //   if (!user || userData) return;
+  //   supabase
+  //     .from("Users")
+  //     .select()
+  //     .eq("uid", user.id)
+  //     .then(({ data: userData, error }) => {
+  //       if (error) {
+  //         console.error(error);
+  //         return;
+  //       }
+  //       setUserData(userData[0]);
+  //     });
+  // }, [user]);
 
   useEffect(() => {
     supabase
@@ -53,55 +67,55 @@ export default function ChatPage({ params }: { params: { groupId: string } }) {
   }, []);
 
   useEffect(() => {
-    if (!groupData || !userData) return;
-    const members = groupData.members.filter(
-      (member) => member !== userData.uid
-    );
-    console.log(members);
-    supabase
-      .from("Users")
-      .select()
-      .in("uid", members)
-      .then((res) => {
-        console.log(data);
-        const membersMap = res.data?.reduce((acc, member) => {
-          return {
-            ...acc,
-            [member.uid]: {
-              firstName: member.firstName,
-              lastName: member.lastName,
-            },
-          };
-        }, {});
-        setMembersData({
-          ...membersMap,
-          [userData.uid]: {
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-          },
-        });
-      });
-  }, [groupData, userData]);
-
-  useEffect(() => {
     if (!groupData) return;
     supabase
       .from("Chats")
-      .select()
+      .select(`*, Users (firstName, lastName)`)
       .order("created_at", { ascending: false })
       .eq("gid", groupData.gid)
       .then((res) => {
-        console.log(data);
+        console.log(res.data);
         setChats(res.data);
       });
   }, [groupData]);
 
+  // useEffect(() => {
+  //   if (!groupData || !userData) return;
+  //   const members = groupData.members.filter(
+  //     (member) => member !== userData.uid
+  //   );
+  //   console.log(members);
+  //   supabase
+  //     .from("Users")
+  //     .select()
+  //     .in("uid", members)
+  //     .then((res) => {
+  //       console.log(data);
+  //       const membersMap = res.data?.reduce((acc, member) => {
+  //         return {
+  //           ...acc,
+  //           [member.uid]: {
+  //             firstName: member.firstName,
+  //             lastName: member.lastName,
+  //           },
+  //         };
+  //       }, {});
+  //       setMembersData({
+  //         ...membersMap,
+  //         [userData.uid]: {
+  //           firstName: userData.firstName,
+  //           lastName: userData.lastName,
+  //         },
+  //       });
+  //     });
+  // }, [groupData, userData]);
+
   const sendMessage = async () => {
-    if (!text || !userData || !groupData) return;
+    if (!text || !user || !groupData) return;
     const message = {
       gid: groupData.gid,
       message: text,
-      author: userData.uid,
+      author: user.id,
       reactions: "",
     };
     await supabase.from("Chats").insert([message]);
@@ -110,7 +124,7 @@ export default function ChatPage({ params }: { params: { groupId: string } }) {
 
   const emojiMap = { Bowling: "🎳", Cooking: "🍳" };
 
-  if (!groupData || !userData || !membersData) return null;
+  if (!groupData || !chats) return null;
   return (
     <div className="flex-1 w-full flex flex-col gap-20 items-center">
       <main className="flex-1 w-4/5 animate-in opacity-0 flex flex-col gap-6 p-6">
@@ -134,13 +148,22 @@ export default function ChatPage({ params }: { params: { groupId: string } }) {
               if (e.code == "Enter") sendMessage();
             }}
           ></input>
-          <div className="flex flex-col gap-4 py-4">
+          <div className="flex flex-col gap-5 py-4">
             {chats.map((chat) => (
               <div key={chat.cid} className="flex gap-4">
-                <div className="rounded-full w-6 h-6 bg-gray-400"></div>
-                <div>
-                  <p>{membersData[chat.author]?.firstName}</p>
-                  <p>{chat.message}</p>
+                <ProfileImage user={chat.Users} type="sm" />
+                <div className="relative">
+                  <p className="text-gray-500 text-xs absolute -top-4">
+                    {chat.Users.firstName}
+                  </p>
+                  <p
+                    className={cn(
+                      chat.author === user.id ? "bg-blue-600" : "",
+                      "px-3 py-1 text-white rounded-2xl text-md"
+                    )}
+                  >
+                    {chat.message}
+                  </p>
                 </div>
               </div>
             ))}
