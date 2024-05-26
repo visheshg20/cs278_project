@@ -6,10 +6,7 @@ import { User } from "@supabase/supabase-js";
 import { cn } from "@/utils";
 
 interface ProfileImageProps {
-  userInfo?:
-    | { firstName: string; lastName: string; profilePicture?: string }
-    | User
-    | null;
+  user: { firstName: string; lastName: string; profilePicture?: string };
   type?: "sm" | "md";
 }
 

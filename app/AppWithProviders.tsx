@@ -21,8 +21,7 @@ export default function AppWithProviders({
   const path = new URL(headerURL ?? "").pathname;
 
   const NavRight = () => {
-    console.log(session);
-    if (session && path !== "/onboarding" && path !== "/survey") {
+    if ((user || session) && path !== "/onboarding" && path !== "/survey") {
       return (
         <div className="h-full flex justify-center items-center gap-4 px-4">
           <Link href="/home">
@@ -31,11 +30,11 @@ export default function AppWithProviders({
           <Link href="/notifications">
             <IconBell width={30} height={30} />
           </Link>
-          <ProfileImage userInfo={user} />
+          {user && <ProfileImage user={user} />}
           <LogoutButton />
         </div>
       );
-    } else if (session) {
+    } else if (user || session) {
       return;
     } else {
       return (

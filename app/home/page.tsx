@@ -1,4 +1,3 @@
-import AuthButton from "@/components/AuthButton";
 import LinkButton from "@/components/LinkButton";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";

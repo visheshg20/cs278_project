@@ -1,7 +1,4 @@
 import { createClient } from "@/utils/supabase/server";
-import Link from "next/link";
-import Image from "next/image";
-import LinkButton from "@/components/LinkButton";
 
 export default async function Index() {
   const canInitSupabaseClient = () => {

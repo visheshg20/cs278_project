@@ -1,6 +1,5 @@
 "use client";
 
-import AuthButton from "@/components/AuthButton";
 import LinkButton from "@/components/LinkButton";
 import { createClient } from "@/utils/supabase/client";
 import { data } from "autoprefixer";
@@ -24,37 +23,7 @@ export default function ChatPage({ params }: { params: { groupId: string } }) {
       console.log(res.data.user);
       setUser(res.data.user);
     });
-    const changes = supabase
-      .channel("schema-db-changes")
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT", // Listen only to INSERTs
-          schema: "public",
-          table: "Chats",
-        },
-        (payload) => {
-          console.log(payload);
-          setChats([...chats, payload.new]);
-        }
-      )
-      .subscribe();
   }, []);
-
-  // useEffect(() => {
-  //   if (!user || userData) return;
-  //   supabase
-  //     .from("Users")
-  //     .select()
-  //     .eq("uid", user.id)
-  //     .then(({ data: userData, error }) => {
-  //       if (error) {
-  //         console.error(error);
-  //         return;
-  //       }
-  //       setUserData(userData[0]);
-  //     });
-  // }, [user]);
 
   useEffect(() => {
     supabase
