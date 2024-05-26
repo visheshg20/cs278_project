@@ -1,4 +1,3 @@
-import LinkButton from "@/components/LinkButton";
 import Link from "next/link";
 import ProfileImage from "@/components/ProfileImage";
 import { createClient } from "@/utils/supabase/server";

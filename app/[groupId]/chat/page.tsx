@@ -1,12 +1,7 @@
 "use client";
 
-import LinkButton from "@/components/LinkButton";
 import { createClient } from "@/utils/supabase/client";
-import { data } from "autoprefixer";
-import { redirect } from "next/navigation";
-import { use, useContext, useEffect, useState } from "react";
-import { type User } from "@supabase/supabase-js";
-import { group } from "console";
+import { useContext, useEffect, useState } from "react";
 import ProfileImage from "@/components/ProfileImage";
 import { cn } from "@/utils";
 import { AuthContext } from "@/app/contexts/AuthContext";

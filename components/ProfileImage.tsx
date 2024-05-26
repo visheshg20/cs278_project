@@ -2,7 +2,6 @@
 
 import React from "react";
 import Image from "next/image";
-import { User } from "@supabase/supabase-js";
 import { cn } from "@/utils";
 
 interface ProfileImageProps {
