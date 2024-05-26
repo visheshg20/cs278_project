@@ -88,12 +88,14 @@ export default async function RootLayout({
             <div className="w-full">
               <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16 p-3">
                 <div className="w-full max-w-4xl flex justify-between items-center  ">
-                  <div className="flex gap-2 justify-center items-center">
-                    <Link href="/home">
+                  <Link href="/home">
+                    <div className="flex gap-2 justify-center items-center">
                       <Image src="/flock.svg" alt="" width={30} height={30} />
-                    </Link>
-                    <p className="font-poppins font-semibold text-lg">Flock</p>
-                  </div>
+                      <p className="font-poppins font-semibold text-lg">
+                        Flock
+                      </p>
+                    </div>{" "}
+                  </Link>
                 </div>
                 <NavRight />
               </nav>

@@ -1,5 +1,6 @@
 import AuthButton from "@/components/AuthButton";
 import LinkButton from "@/components/LinkButton";
+import Link from "next/link";
 import ProfileImage from "@/components/ProfileImage";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
@@ -66,7 +67,11 @@ export default async function FlocksPage() {
         <hr className="border-black" />
         <div className="">
           {groupsData.map((group, index: number) => (
-            <div className="w-full">
+            <Link
+              href={`/${group.gid}/chat`}
+              className="w-full"
+              key={`${group.gid}-${index}`}
+            >
               <div className="flex w-full justify-between">
                 <div className="flex gap-4">
                   <div className="bg-purple-300 flex justify-center items-center w-24	h-24 text-4xl rounded-full">
@@ -79,8 +84,11 @@ export default async function FlocksPage() {
                     <div className="flex gap-4">
                       {Object.keys(membersMap)
                         .filter((member) => group.members.includes(member))
-                        .map((member) => (
-                          <ProfileImage userInfo={membersMap[member]} />
+                        .map((member, index) => (
+                          <ProfileImage
+                            userInfo={membersMap[member]}
+                            key={`${group.gid}-${member}-${index}`}
+                          />
                         ))}
                     </div>
                   </div>
@@ -99,7 +107,7 @@ export default async function FlocksPage() {
               </div>
 
               <hr className="border-black m-5" />
-            </div>
+            </Link>
           ))}
         </div>
       </main>
