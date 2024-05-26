@@ -1,9 +1,13 @@
 import { createClient } from "@/utils/supabase/server";
 import React from "react";
 import Image from "next/image";
+import { User } from "@supabase/supabase-js";
 
 interface ProfileImageProps {
-  userInfo?: { firstName: string; lastName: string; profilePicture?: string };
+  userInfo?:
+    | { firstName: string; lastName: string; profilePicture?: string }
+    | User
+    | null;
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = async ({ userInfo }) => {
