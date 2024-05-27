@@ -6,9 +6,12 @@ export const updateSession = async (request: NextRequest) => {
   // Feel free to remove once you have Supabase connected.
   try {
     // Create an unmodified response
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-url", request.url);
+
     let response = NextResponse.next({
       request: {
-        headers: request.headers,
+        headers: requestHeaders,
       },
     });
 
@@ -57,13 +60,29 @@ export const updateSession = async (request: NextRequest) => {
             });
           },
         },
-      },
+      }
     );
 
     // This will refresh session if expired - required for Server Components
     // https://supabase.com/docs/guides/auth/server-side/nextjs
-    await supabase.auth.getUser();
-
+    const { data, error } = await supabase.auth.getUser();
+    // console.log(data.user);
+    if (error) {
+      console.error(error);
+      return response;
+    }
+    if (!data.user && !["/login", "/"].includes(request.nextUrl.pathname)) {
+      const response = NextResponse.redirect(
+        new URL("/login", request.nextUrl)
+      );
+      response.headers.set("x-url", request.url);
+      return response;
+    }
+    if (data.user && ["/login", "/"].includes(request.nextUrl.pathname)) {
+      const response = NextResponse.redirect(new URL("/home", request.nextUrl));
+      response.headers.set("x-url", request.url);
+      return response;
+    }
     return response;
   } catch (e) {
     // If you are here, a Supabase client could not be created!

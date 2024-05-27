@@ -2,10 +2,11 @@
 
 "use client"; // This is a client component 👈🏽
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import { cn } from "@/utils";
+import { AuthContext } from "@/app/contexts/AuthContext";
 
 interface FormData {
   firstName: string;
@@ -18,15 +19,7 @@ interface FormData {
 export default function OnboardingPage() {
   const supabase = createClient();
   const router = useRouter();
-
-  //HANDLE UNAUTHENTICATED USER HERE URGENT
-  // const {
-  //   data: { user },
-  // } = await supabase.auth.getUser();
-  // console.log(user);
-  // if (!user) {
-  //   return redirect("/login");
-  // }
+  const { user } = useContext(AuthContext);
 
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
@@ -38,16 +31,11 @@ export default function OnboardingPage() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const uid = (await supabase.auth.getUser()).data.user?.id;
-    if (!uid) {
-      throw new Error("No user found");
-    }
-
     console.log("Form Data Submitted:", formData);
     const { error: updateError } = await supabase
       .from("Users")
       .update({ ...formData, status: 1 })
-      .eq("uid", uid);
+      .eq("uid", user?.uid);
 
     if (updateError) {
       console.error(updateError);

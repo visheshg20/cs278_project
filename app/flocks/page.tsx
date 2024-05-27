@@ -1,5 +1,3 @@
-import AuthButton from "@/components/AuthButton";
-import LinkButton from "@/components/LinkButton";
 import Link from "next/link";
 import ProfileImage from "@/components/ProfileImage";
 import { createClient } from "@/utils/supabase/server";
@@ -37,7 +35,6 @@ export default async function FlocksPage() {
   const allMembers = groupsData
     ?.reduce((acc, group) => [...acc, ...group.members], [])
     .filter((member) => member !== user.id);
-  // console.log(allMembers);
 
   const { data: membersData, error: membersError } = await supabase
     .from("Users")
@@ -50,8 +47,6 @@ export default async function FlocksPage() {
       [member.uid]: { firstName: member.firstName, lastName: member.lastName },
     };
   }, {});
-
-  // console.log(membersMap);
 
   const emojiMap = { Bowling: "🎳", Cooking: "🍳" };
 
@@ -86,7 +81,7 @@ export default async function FlocksPage() {
                         .filter((member) => group.members.includes(member))
                         .map((member, index) => (
                           <ProfileImage
-                            userInfo={membersMap[member]}
+                            user={membersMap[member]}
                             key={`${group.gid}-${member}-${index}`}
                           />
                         ))}
