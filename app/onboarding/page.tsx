@@ -31,7 +31,7 @@ export default function OnboardingPage() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Form Data Submitted:", formData);
+    console.info("Form Data Submitted:", formData);
     const { error: updateError } = await supabase
       .from("Users")
       .update({ ...formData, status: 1 })

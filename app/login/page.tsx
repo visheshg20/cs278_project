@@ -53,7 +53,7 @@ export default function Login({
       },
     });
 
-    if (authError || !authData.user) {
+    if (authError ?? !authData.user) {
       console.error(authError);
       return redirect("/login?message=Could not authenticate user");
     }

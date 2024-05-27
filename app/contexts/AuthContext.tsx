@@ -3,7 +3,6 @@
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 import React, { createContext, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 export const AuthContext = createContext<{
   user: User | null;
@@ -17,18 +16,11 @@ export const AuthContext = createContext<{
   setSession: (session: User | null) => {},
 });
 
-export const AuthProvider = ({
-  children,
-  accessToken,
-}: {
-  children: JSX.Element;
-  accessToken: string | null;
-}) => {
+export const AuthProvider = ({ children }: { children: JSX.Element }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<User | null>(null);
 
   const supabase = createClient();
-  const router = useRouter();
 
   const getUserObject = async () => {
     const { data: sbUserObject } = await supabase
@@ -64,6 +56,9 @@ export const AuthProvider = ({
         }
       }
     );
+    return () => {
+      listener?.subscription.unsubscribe();
+    };
   });
 
   useEffect(() => {

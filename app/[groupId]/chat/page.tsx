@@ -21,19 +21,19 @@ export default function ChatPage({ params }: { params: { groupId: string } }) {
       .select()
       .eq("gid", params.groupId)
       .then(({ data: groupData, error }) => {
+        if (error) console.error(error);
         setGroupData(groupData?.[0]);
       });
   }, []);
 
   useEffect(() => {
-    if (!groupData) return;
     supabase
       .from("Chats")
-      .select(`*, Users (firstName, lastName)`)
+      .select("*, Users (firstName, lastName)")
       .order("created_at", { ascending: false })
       .eq("gid", groupData.gid)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         setChats(res.data);
       });
   }, [groupData]);
@@ -83,7 +83,7 @@ export default function ChatPage({ params }: { params: { groupId: string } }) {
 
   const emojiMap = { Bowling: "🎳", Cooking: "🍳" };
 
-  if (!groupData || !chats) return null;
+  if (!groupData || chats.length === 0) return null;
   return (
     <div className="flex-1 w-full flex flex-col gap-20 items-center">
       <main className="flex-1 w-4/5 animate-in opacity-0 flex flex-col gap-6 p-6">
