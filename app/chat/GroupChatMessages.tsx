@@ -91,6 +91,7 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
                 ? {
                     ...payload.new,
                     reactions: JSON.stringify(payload.new.reactions),
+                    reply: JSON.stringify(payload.new.reply),
                   }
                 : chat
             );
