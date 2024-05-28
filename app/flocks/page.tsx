@@ -61,7 +61,7 @@ export default async function FlocksPage() {
         <div className="">
           {groupsData.map((group, index: number) => (
             <Link
-              href={`/${group.gid}/chat`}
+              href={`/chat/${group.gid}`}
               className="w-full"
               key={`${group.gid}-${index}`}
             >
