@@ -12,6 +12,7 @@ interface ChatMessageProps {
   authorIsUser: boolean;
   prevAuthorIsSame: boolean;
   nextAuthorIsSame: boolean;
+  setRepliedChat: (chat: any) => void;
 }
 
 const ChatMessage: React.FC<ChatMessageProps> = ({
@@ -20,6 +21,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   authorIsUser,
   prevAuthorIsSame,
   nextAuthorIsSame,
+  setRepliedChat,
 }) => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
   const [showReactions, setShowReactions] = useState<boolean>(false);
@@ -28,6 +30,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   const supabase = createClient();
 
   const reactions = JSON.parse(chat.reactions);
+  const reply = chat.reply ? JSON.parse(chat.reply) : null;
   const userReaction = reactions.find((reaction) => reaction.uid === user.uid);
 
   const getEmojiString = () => {
@@ -114,14 +117,33 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
         )}
       </div>
       <div className="relative w-full">
-        {!prevAuthorIsSame && !authorIsUser && (
+        {!prevAuthorIsSame && !authorIsUser && !reply && (
           <p className={cn("text-gray-500 text-xs pl-2")}>{member.firstName}</p>
+        )}
+        {reply && (
+          <div
+            className={authorIsUser ? "flex justify-end" : "flex justify-start"}
+          >
+            <div
+              className={cn(
+                authorIsUser ? "items-end" : "items-start",
+                "flex flex-col w-full"
+              )}
+            >
+              <p className={cn("text-gray-500 text-xs pl-2")}>
+                {reply.from} replied to {reply.to}
+              </p>
+              <p className="text-white bg-gray-600 w-fit max-w-[25%] truncate px-3 py-1 rounded-full overflow-hidden">
+                {reply.message}
+              </p>
+            </div>
+          </div>
         )}
         <div className={authorIsUser ? "flex flex-row-reverse" : "flex"}>
           <p
             className={cn(
               authorIsUser ? "bg-blue-600" : "bg-gray-500",
-              "px-3 py-1 text-white rounded-2xl text-md max-w-[70%] relative"
+              "px-3 py-1 text-white rounded-2xl text-md max-w-[70%] relative "
             )}
           >
             {chat.message}
@@ -166,7 +188,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                 />
                 {reactionsElement}
               </button>
-              <button className="hover:bg-[rgba(255,255,255,0.7)] rounded-full p-1">
+              <button
+                className="hover:bg-[rgba(255,255,255,0.7)] rounded-full p-1"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setRepliedChat({ ...chat, authorName: member.firstName });
+                }}
+              >
                 <Image src="/reply.svg" alt="" width={20} height={20} />
               </button>
             </div>

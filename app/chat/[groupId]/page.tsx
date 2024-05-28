@@ -17,6 +17,7 @@ export default function ChatPage({
   const { user } = useContext(AuthContext);
 
   const [groupData, setGroupData] = useState(null);
+  const [repliedChat, setRepliedChat] = useState(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -56,10 +57,18 @@ export default function ChatPage({
               className="absolute bottom-0 w-full h-full overflow-scroll"
               ref={scrollRef}
             >
-              <GroupChatMessages groupId={groupId} groupData={groupData} />
+              <GroupChatMessages
+                setRepliedChat={setRepliedChat}
+                groupId={groupId}
+                groupData={groupData}
+              />
             </div>
           </div>
-          <ChatTextBar groupId={groupId} />
+          <ChatTextBar
+            setRepliedChat={setRepliedChat}
+            repliedChat={repliedChat}
+            groupId={groupId}
+          />
         </div>
       </main>
     </div>

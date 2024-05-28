@@ -10,11 +10,13 @@ import ChatMessage from "./ChatMessage";
 interface GroupChatMessagesProps {
   groupData: any;
   groupId: string;
+  setRepliedChat: (chat: any) => void;
 }
 
 const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
   groupData,
   groupId,
+  setRepliedChat,
 }) => {
   const supabase = createClient();
   const { user } = useContext(AuthContext);
@@ -79,6 +81,7 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
               {
                 ...payload.new,
                 reactions: JSON.stringify(payload.new.reactions),
+                reply: JSON.stringify(payload.new.reply),
               },
             ]);
           }
@@ -113,6 +116,7 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
           authorIsUser={chat.author === user.uid}
           prevAuthorIsSame={chats[index - 1]?.author === chat.author}
           nextAuthorIsSame={chats[index + 1]?.author === chat.author}
+          setRepliedChat={setRepliedChat}
         />
       ))}
     </div>
