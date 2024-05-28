@@ -41,7 +41,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     if (reactionRef.current)
       return (
         window.innerWidth - reactionRef.current?.getBoundingClientRect().left >
-        window.innerHeight / 2
+        window.innerWidth / 2
       );
     return null;
   };
@@ -147,10 +147,13 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                 ref={reactionRef}
                 className="hover:bg-[rgba(255,255,255,0.7)] rounded-full p-1 relative"
                 onBlur={() => {
-                  // setShowReactions(false);
-                  // setShowOptions(false);
+                  setShowReactions(false);
+                  setShowOptions(false);
                 }}
                 onClick={() => {
+                  setShowReactions(!showReactions);
+                }}
+                onContextMenu={() => {
                   setShowReactions(!showReactions);
                 }}
               >
