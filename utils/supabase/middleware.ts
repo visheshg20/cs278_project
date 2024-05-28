@@ -66,11 +66,7 @@ export const updateSession = async (request: NextRequest) => {
     // This will refresh session if expired - required for Server Components
     // https://supabase.com/docs/guides/auth/server-side/nextjs
     const { data, error } = await supabase.auth.getUser();
-    // console.log(data.user);
-    if (error) {
-      console.error(error);
-      return response;
-    }
+    console.log(data.user, error);
     if (!data.user && !["/login", "/"].includes(request.nextUrl.pathname)) {
       const response = NextResponse.redirect(
         new URL("/login", request.nextUrl)
@@ -83,6 +79,7 @@ export const updateSession = async (request: NextRequest) => {
       response.headers.set("x-url", request.url);
       return response;
     }
+
     return response;
   } catch (e) {
     // If you are here, a Supabase client could not be created!

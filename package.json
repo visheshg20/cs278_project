@@ -15,6 +15,8 @@
     "@tabler/icons-react": "^3.3.0",
     "autoprefixer": "10.4.17",
     "clsx": "^2.1.1",
+    "eslint-config-next": "^14.2.3",
+    "eslint-plugin-no-relative-import-paths": "^1.5.4",
     "geist": "^1.2.1",
     "next": "latest",
     "postcss": "8.4.33",
@@ -25,13 +27,19 @@
     "typescript": "5.3.3"
   },
   "devDependencies": {
+    "@eslint/js": "^9.3.0",
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
+    "@typescript-eslint/eslint-plugin": "^7.10.0",
+    "@typescript-eslint/parser": "^7.10.0",
     "encoding": "^0.1.13",
-    "eslint": "^9.2.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "globals": "^15.3.0",
     "install": "^0.13.0",
     "npm": "^10.7.0",
-    "supabase": "^1.165.0"
+    "supabase": "^1.165.0",
+    "typescript-eslint": "^7.10.0"
   }
 }

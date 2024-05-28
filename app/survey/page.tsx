@@ -36,7 +36,7 @@ const SurveyPage: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Form Data Submitted:", formData);
+    console.info("Form Data Submitted:", formData);
     router.push("/home");
   };
 
@@ -88,7 +88,7 @@ const SurveyPage: React.FC = () => {
   return (
     <div className="w-screen h-screen flex justify-center items-center">
       <div className="p-8 w-4/5 h-4/5 rounded-xl bg-white/50 backdrop-blur-md border border-gray-300 overflow-auto">
-        <h1 className="text-2xl m-4 mt-0">Let's get to know you better!</h1>
+        <h1 className="text-2xl m-4 mt-0">Let{"'"}s get to know you better!</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           <div className="">
             <h2>
@@ -168,7 +168,7 @@ const SurveyPage: React.FC = () => {
               What type of group activities interest you? (Please rank these
               options)
             </h2>
-            {groupActivities.map((activity, index) => (
+            {groupActivities.map((activity) => (
               <div key={activity}>
                 <label>
                   {activity}:

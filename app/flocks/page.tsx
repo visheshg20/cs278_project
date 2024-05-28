@@ -25,18 +25,16 @@ export default async function FlocksPage() {
     return redirect("/onboarding");
   }
 
-  const { data: groupsData, error: groupsError } = await supabase
+  const { data: groupsData } = await supabase
     .from("Groups")
     .select()
     .in("gid", userData[0].groups);
-
-  console.log(groupsData);
 
   const allMembers = groupsData
     ?.reduce((acc, group) => [...acc, ...group.members], [])
     .filter((member) => member !== user.id);
 
-  const { data: membersData, error: membersError } = await supabase
+  const { data: membersData } = await supabase
     .from("Users")
     .select()
     .in("uid", allMembers);

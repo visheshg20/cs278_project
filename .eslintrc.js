@@ -1,21 +1,17 @@
 module.exports = {
   extends: "next/core-web-vitals",
   parser: "@typescript-eslint/parser",
-  plugins: [
-    "no-relative-import-paths",
-    "@typescript-eslint",
-    // "mad-realities",
-  ],
+  plugins: ["no-relative-import-paths", "@typescript-eslint"],
   overrides: [
     {
       // Only run rules involving type info on ts/tsx files, otherwise ESLint freaks out.
       parserOptions: {
-        project: "./tsconfig.eslint.json",
+        project: "./tsconfig.json",
       },
       files: ["./**/*.{ts,tsx}"],
       rules: {
         "@typescript-eslint/no-unnecessary-condition": [
-          "error",
+          "warn",
           {
             allowConstantLoopConditions: false,
           },
@@ -32,14 +28,6 @@ module.exports = {
         "@typescript-eslint/await-thenable": "error",
       },
     },
-    // TODO: Re-enable this when we package this ESLint plugin outside this repo.
-    // {
-    //   // Only run zod check on API routes.
-    //   files: ["./src/pages/api/**/*.{ts,tsx}"],
-    //   rules: {
-    //     "mad-realities/zod-for-nextjs-api": "warn",
-    //   },
-    // },
   ],
   rules: {
     "no-console": [
@@ -60,6 +48,7 @@ module.exports = {
       "error",
       {
         vars: "all",
+        args: "none",
         ignoreRestSiblings: false,
         argsIgnorePattern: "^_",
         varsIgnorePattern: "^_",

@@ -21,7 +21,7 @@ export default function AppWithProviders({
   const path = new URL(headerURL ?? "").pathname;
 
   const NavRight = () => {
-    if ((user || session) && path !== "/onboarding" && path !== "/survey") {
+    if (session && path !== "/onboarding" && path !== "/survey") {
       return (
         <div className="h-full flex justify-center items-center gap-4 px-4">
           <Link href="/home">
@@ -34,7 +34,7 @@ export default function AppWithProviders({
           <LogoutButton />
         </div>
       );
-    } else if (user || session) {
+    } else if (session) {
       return;
     } else {
       return (

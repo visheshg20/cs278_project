@@ -3,7 +3,6 @@ import { Poppins } from "next/font/google";
 
 import "./globals.css";
 import { cn } from "@/utils";
-import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 
 import { AuthProvider } from "@/app/contexts/AuthContext";
@@ -28,25 +27,17 @@ const poppins = Poppins({
   subsets: ["latin"],
 });
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const headerURL = headers().get("x-url");
-  console.log(headerURL);
-
-  const supabase = createClient();
-
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  const accessToken = session?.access_token ?? null;
+  // console.log(headerURL);
 
   return (
     <html lang="en" className={cn(poppins.variable, GeistSans.className)}>
-      <AuthProvider accessToken={accessToken}>
+      <AuthProvider>
         <AppWithProviders headerURL={headerURL}> {children}</AppWithProviders>
       </AuthProvider>
     </html>
