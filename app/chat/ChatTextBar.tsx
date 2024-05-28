@@ -22,7 +22,7 @@ const ChatTextBar: React.FC<ChatTextBarProps> = ({ groupId }) => {
       gid: groupId,
       message: text,
       author: user.uid,
-      reactions: "",
+      reactions: "[]",
     };
     const { error } = await supabase.from("Chats").insert([message]);
     if (error) console.error(error);
