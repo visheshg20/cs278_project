@@ -52,24 +52,25 @@ const ChatTextBar: React.FC<ChatTextBarProps> = ({
     <div className="relative w-full">
       <div className="mt-1">
         {repliedChat && (
-          <div className="w-full bg-gray-300 text-black">
+          <div className="w-full bg-gray-600 text-white rounded-full pl-5 pr-2 py-1 relative">
             <div className="flex justify-between pr-2">
-              <p>Replying to {repliedChat.authorName}</p>{" "}
+              <p>Replying to {repliedChat.authorName}:</p>{" "}
               <button
                 onClick={() => setRepliedChat(null)}
-                className="flex justify-center items-center p-0.5 rounded-full hover:bg-red-600 bg-gray-600 h-fit mt-1"
+                className="flex justify-center items-center p-0.5 rounded-full hover:bg-red-600 bg-gray-500 h-fit mt-1"
               >
                 <Image src="/close.svg" alt="" width={12} height={12} />
               </button>
             </div>
 
-            <p>{repliedChat.message}</p>
+            <p className="text-sm relative z-[1]">{repliedChat.message}</p>
+            <div className="absolute w-full h-[46px] bg-gray-600 left-0 top-[50%] z-0" />
           </div>
         )}
 
         <input
           ref={inputRef}
-          className="rounded-full h-10 px-4 min-w-full"
+          className="rounded-full h-10 px-4 min-w-full relative z-[1]"
           type="text"
           value={text}
           onChange={(e) => {
@@ -80,7 +81,7 @@ const ChatTextBar: React.FC<ChatTextBarProps> = ({
           }}
         />
       </div>
-      <div className="absolute bottom-0 right-2 flex items-center h-10">
+      <div className="absolute bottom-0 right-2 flex items-center h-10 z-[1]">
         <button
           disabled={!text}
           onClick={sendMessage}

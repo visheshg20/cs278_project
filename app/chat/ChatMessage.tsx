@@ -122,7 +122,10 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
         )}
         {reply && (
           <div
-            className={authorIsUser ? "flex justify-end" : "flex justify-start"}
+            className={cn(
+              authorIsUser ? "justify-end" : "justify-start",
+              "flex relative"
+            )}
           >
             <div
               className={cn(
@@ -133,9 +136,17 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
               <p className={cn("text-gray-500 text-xs pl-2")}>
                 {reply.from} replied to {reply.to}
               </p>
-              <p className="text-white bg-gray-600 w-fit max-w-[25%] truncate px-3 py-1 rounded-full overflow-hidden">
+              <p className="text-white bg-gray-600 w-fit max-w-[25%] truncate px-3 py-1 rounded-full overflow-hidden relative z-[1]">
                 {reply.message}
               </p>
+            </div>
+            <div
+              className={cn(
+                authorIsUser ? "rounded-bl-xl" : "rounded-br-xl",
+                "absolute select-none w-fit max-w-[25%] truncate px-3 py-1 bg-gray-600 text-gray-600 -bottom-[16px] -z-[0]"
+              )}
+            >
+              {reply.message}
             </div>
           </div>
         )}
@@ -154,14 +165,14 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                   "absolute -bottom-2.5 z-10 bg-white rounded-full text-black font-semibold text-xs py-0.5 px-1 select-none	"
                 )}
               >
-                {reactions.length} {getEmojiString()}
+                {reactions.length > 1 && reactions.length} {getEmojiString()}
               </div>
             )}
           </p>
           {showOptions && (
             <div
               className={cn(
-                "items-center justify-center, flex px-2",
+                "items-center justify-center z-[1] flex px-2",
                 authorIsUser && "flex-row-reverse"
               )}
             >
