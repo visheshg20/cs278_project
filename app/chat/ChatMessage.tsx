@@ -27,6 +27,16 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   const { user } = useContext(AuthContext);
   const supabase = createClient();
 
+  const reactions = JSON.parse(chat.reactions);
+  const userReaction = reactions.find((reaction) => reaction.uid === user.uid);
+
+  const getEmojiString = () => {
+    const emojiList = Array.from(
+      new Set(reactions.map((reaction) => Reaction[reaction.reaction]))
+    ).splice(0, 3);
+    return emojiList.join("");
+  };
+
   const isReactionOnRight = () => {
     if (reactionRef.current)
       return (
@@ -37,8 +47,16 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   };
 
   const handleReaction = async (reaction: string) => {
-    console.log(chat.reactions);
-    const updated = [...chat.reactions, { uid: user.uid, reaction }];
+    const parsed = JSON.parse(chat.reactions);
+    let updated;
+    if (userReaction && userReaction.reaction === reaction)
+      updated = [...parsed.filter((reaction) => reaction.uid !== user?.uid)];
+    else if (userReaction)
+      updated = [
+        ...parsed.filter((reaction) => reaction.uid !== user?.uid),
+        { uid: user.uid, reaction },
+      ];
+    else updated = [...parsed, { uid: user.uid, reaction }];
     const updatedString = JSON.stringify(updated);
     const { error } = await supabase
       .from("Chats")
@@ -55,14 +73,20 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
         isReactionOnRight()
           ? "-left-4 origin-bottom-left"
           : "-right-4 origin-bottom-right",
-        "absolute flex gap-1 bg-white px-2 py-1 rounded-full bottom-8 transition-transform transition-duration-350 scale-0",
+        "absolute flex bg-white px-2 py-1 rounded-full bottom-8 transition-transform transition-duration-350 scale-0 z-[15]",
         showReactions && "scale-100"
       )}
     >
       {Object.keys(Reaction)
         .filter((key) => isNaN(Number(key)))
         .map((key) => (
-          <div className="text-[2rem]" onClick={() => handleReaction(key)}>
+          <div
+            className={cn(
+              userReaction?.reaction === key && "bg-gray-300",
+              "text-[2rem] rounded-full px-0.5 h-fit"
+            )}
+            onClick={() => handleReaction(key)}
+          >
             {Reaction[key]}
           </div>
         ))}
@@ -74,7 +98,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
       key={chat.cid}
       className={cn(
         authorIsUser && "flex-row-reverse",
-        "flex gap-2 w-full pb-1"
+        reactions.length > 0 ? "pb-3" : "pb-1",
+        "flex gap-2 w-full"
       )}
       onMouseOver={() => setShowOptions(true)}
       onMouseLeave={() => {
@@ -96,10 +121,20 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
           <p
             className={cn(
               authorIsUser ? "bg-blue-600" : "bg-gray-500",
-              "px-3 py-1 text-white rounded-2xl text-md max-w-[70%]"
+              "px-3 py-1 text-white rounded-2xl text-md max-w-[70%] relative"
             )}
           >
             {chat.message}
+            {reactions.length > 0 && (
+              <div
+                className={cn(
+                  authorIsUser ? "-left-2" : "-right-2",
+                  "absolute -bottom-2.5 z-10 bg-white rounded-full text-black font-semibold text-xs py-0.5 px-1 select-none	"
+                )}
+              >
+                {reactions.length} {getEmojiString()}
+              </div>
+            )}
           </p>
           {showOptions && (
             <div
@@ -112,11 +147,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                 ref={reactionRef}
                 className="hover:bg-[rgba(255,255,255,0.7)] rounded-full p-1 relative"
                 onBlur={() => {
-                  setShowReactions(false);
-                  setShowOptions(false);
+                  // setShowReactions(false);
+                  // setShowOptions(false);
                 }}
                 onClick={() => {
-                  setShowReactions(true);
+                  setShowReactions(!showReactions);
                 }}
               >
                 <Image

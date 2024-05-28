@@ -30,7 +30,6 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
       .order("created_at", { ascending: true })
       .eq("gid", groupData.gid)
       .then((res) => {
-        console.log(res.data);
         setChats(res.data);
       });
   }, [groupData]);
@@ -38,13 +37,11 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
   useEffect(() => {
     if (!groupData || !user) return;
     const members = groupData.members.filter((member) => member !== user.uid);
-    console.log(members);
     supabase
       .from("Users")
       .select()
       .in("uid", members)
       .then((res) => {
-        console.log(res);
         const membersMap = res.data?.reduce((acc, member) => {
           return {
             ...acc,
@@ -65,7 +62,6 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
   }, [groupData, user]);
 
   useEffect(() => {
-    console.log(chats);
     const listener = supabase
       .channel("table-db-changes")
       .on(
@@ -78,12 +74,24 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
         },
         (payload) => {
           if (payload.eventType === "INSERT") {
-            console.log(...chats);
-            setChats([...chats, payload.new]);
+            setChats([
+              ...chats,
+              {
+                ...payload.new,
+                reactions: JSON.stringify(payload.new.reactions),
+              },
+            ]);
           }
           if (payload.eventType === "UPDATE") {
-            //TBD
-            // setChats(chats.map(chat => chat.cid === payload.new.cid ? payload.new : chat))
+            const updatedChats = chats.map((chat) =>
+              chat.cid === payload.new.cid
+                ? {
+                    ...payload.new,
+                    reactions: JSON.stringify(payload.new.reactions),
+                  }
+                : chat
+            );
+            setChats(updatedChats);
           }
         }
       )
