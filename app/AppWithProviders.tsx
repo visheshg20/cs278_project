@@ -35,7 +35,7 @@ export default function AppWithProviders({
         </div>
       );
     } else if (session) {
-      return;
+      return <div></div>;
     } else {
       return (
         <div className="flex gap-3">
