@@ -144,8 +144,18 @@ export default function OnboardingPage() {
                 y: { type: "spring", stiffness: 400, damping: 50 },
                 opacity: { duration: 0.2 },
               }}
-              onScroll={(e) => {
-                console.log(e);
+              className="h-full"
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              onScroll={() => console.log("scroll end")}
+              onDragEnd={(_, dragInfo) => {
+                console.log(dragInfo, Math.abs(dragInfo.velocity.y) > 50);
+                if (Math.abs(dragInfo.velocity.y) > 50) {
+                  setDirection(-Math.sign(dragInfo.velocity.y));
+                  setQuestionIndex(
+                    Math.max(0, questionIndex - Math.sign(dragInfo.velocity.y))
+                  );
+                }
               }}
             >
               <FullScreenQuestion
