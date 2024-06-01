@@ -2,13 +2,13 @@
 
 import { createClient } from "@/utils/supabase/server";
 
-const supabase = createClient();
-
 export async function serverLogout() {
+  const supabase = createClient();
   await supabase.auth.signOut();
 }
 
 export async function serverGetAuth() {
+  const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -17,6 +17,7 @@ export async function serverGetAuth() {
 }
 
 export async function serverGetUser() {
+  const supabase = createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -33,6 +34,7 @@ export async function serverGetUser() {
 }
 
 export async function serverGetGroupById(gid: string) {
+  const supabase = createClient();
   const { data: groupData, error } = await supabase
     .from("Groups")
     .select()
@@ -44,6 +46,7 @@ export async function serverGetGroupById(gid: string) {
 }
 
 export async function serverGetGroupsByIds(gids: string[]) {
+  const supabase = createClient();
   const { data: groupData, error } = await supabase
     .from("Groups")
     .select()
@@ -54,6 +57,7 @@ export async function serverGetGroupsByIds(gids: string[]) {
 }
 
 export async function serverGetGroupMembersData(gid: string, uid?: string) {
+  const supabase = createClient();
   const groupData = await serverGetGroupById(gid);
   const allMembers = groupData.members;
   let { data: membersData, error } = await supabase
@@ -80,6 +84,7 @@ export async function serverGetMembersDataByGroups(
   gids: string[],
   uid: string
 ) {
+  const supabase = createClient();
   const groupsData = await serverGetGroupsByIds(gids);
   const allMembers = groupsData
     ?.reduce((acc, group) => [...acc, ...group.members], [])
