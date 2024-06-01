@@ -62,7 +62,7 @@ export default function AppWithProviders({
             <div className="w-full max-w-4xl flex justify-between items-center  ">
               <Link href="/home">
                 <div className="flex gap-2 justify-center items-center">
-                  <Image src="/flock.svg" alt="" width={30} height={30} />
+                  <Image src="/logo.png" alt="" width={30} height={30} />
                   <p className="font-poppins font-semibold text-lg">Flock</p>
                 </div>{" "}
               </Link>

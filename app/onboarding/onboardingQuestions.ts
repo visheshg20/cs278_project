@@ -1,4 +1,4 @@
-const groupActivities = [
+export const groupActivities = [
   "Casual soccer match",
   "Super Smash Bros & Mario Kart Tournament",
   "Board Game Nights",

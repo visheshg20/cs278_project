@@ -1,5 +1,3 @@
-"use client";
-
 import { cn } from "@/utils";
 import Link from "next/link";
 import React from "react";

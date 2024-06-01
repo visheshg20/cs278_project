@@ -147,9 +147,7 @@ export default function OnboardingPage() {
               className="h-full"
               drag="y"
               dragConstraints={{ top: 0, bottom: 0 }}
-              onScroll={() => console.log("scroll end")}
               onDragEnd={(_, dragInfo) => {
-                console.log(dragInfo, Math.abs(dragInfo.velocity.y) > 50);
                 if (Math.abs(dragInfo.velocity.y) > 50) {
                   setDirection(-Math.sign(dragInfo.velocity.y));
                   setQuestionIndex(
