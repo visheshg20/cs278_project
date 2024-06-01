@@ -4,7 +4,7 @@ import {
   serverGetUser,
 } from "@/app/actions";
 import Image from "next/image";
-import { activitiesMap } from "@/utils";
+import { activitiesMap } from "@/types/types";
 import { format } from "timeago.js";
 import ProfileImage from "@/components/ProfileImage";
 import Link from "next/link";

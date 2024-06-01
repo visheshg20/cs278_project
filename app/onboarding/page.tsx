@@ -104,6 +104,16 @@ export default function OnboardingPage() {
     return entry?.length > 0;
   }).length;
 
+  const handleQuestionChange = (dir: number) => {
+    if (dir > 0) {
+      setDirection(1);
+      setQuestionIndex(Math.min(questions.length - 1, questionIndex + 1));
+    } else {
+      setDirection(-1);
+      setQuestionIndex(Math.max(0, questionIndex - 1));
+    }
+  };
+
   return (
     <div className="flex-1 w-full overflow-hidden flex justify-center relative">
       <div className="flex w-[85%] sm:w-1/2 flex-col justify-center mt-8">
@@ -149,10 +159,7 @@ export default function OnboardingPage() {
               dragConstraints={{ top: 0, bottom: 0 }}
               onDragEnd={(_, dragInfo) => {
                 if (Math.abs(dragInfo.velocity.y) > 50) {
-                  setDirection(-Math.sign(dragInfo.velocity.y));
-                  setQuestionIndex(
-                    Math.max(0, questionIndex - Math.sign(dragInfo.velocity.y))
-                  );
+                  handleQuestionChange(-Math.sign(dragInfo.velocity.y));
                 }
               }}
             >
@@ -182,10 +189,7 @@ export default function OnboardingPage() {
                       [questions[questionIndex].field]: answer,
                     });
                   }
-                  setDirection(1);
-                  setQuestionIndex(
-                    Math.min(questions.length - 1, questionIndex + 1)
-                  );
+                  handleQuestionChange(1);
                   console.log(completedQuestions, questions.length - 1);
                   if (completedQuestions >= questions.length - 1) {
                     console.log("Submitting form");
@@ -198,21 +202,11 @@ export default function OnboardingPage() {
         </div>
       </div>
       <div className="absolute bottom-6 right-6 bg-[rgba(255,255,255,0.3)] flex drop-shadow-sm rounded-lg gap-1 h-9 px-1 items-center">
-        <button
-          onClick={() => {
-            setDirection(-1);
-            setQuestionIndex(Math.max(0, questionIndex - 1));
-          }}
-        >
+        <button onClick={() => handleQuestionChange(-1)}>
           <Image alt="" src="/chevron-up.svg" height={30} width={30} />
         </button>
         <div className="w-0.5 bg-white h-full" />
-        <button
-          onClick={() => {
-            setDirection(1);
-            setQuestionIndex(Math.min(questions.length - 1, questionIndex + 1));
-          }}
-        >
+        <button onClick={() => handleQuestionChange(1)}>
           <Image alt="" src="/chevron-down.svg" height={30} width={30} />
         </button>
       </div>
