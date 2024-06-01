@@ -2,13 +2,12 @@ import Link from "next/link";
 import ProfileImage from "@/components/ProfileImage";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+import { serverGetUser } from "@/app/actions";
 
 export default async function FlocksPage() {
   const supabase = createClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await serverGetUser();
   if (!user) {
     return redirect("/login");
   }

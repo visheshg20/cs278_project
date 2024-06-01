@@ -6,6 +6,7 @@ import { cn } from "@/utils";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import ChatTextBar from "@/app/chat/ChatTextBar";
 import GroupChatMessages from "@/app/chat/GroupChatMessages";
+import { serverGetGroupById } from "@/app/actions";
 
 export default function ChatPage({
   params: { groupId },
@@ -21,14 +22,10 @@ export default function ChatPage({
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    supabase
-      .from("Groups")
-      .select()
-      .eq("gid", groupId)
-      .then(({ data: groupData, error }) => {
-        if (error) console.error(error);
-        setGroupData(groupData?.[0]);
-      });
+    async function getData() {
+      setGroupData(await serverGetGroupById(groupId));
+    }
+    getData();
   }, []);
 
   useEffect(() => {

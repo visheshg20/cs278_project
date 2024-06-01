@@ -6,6 +6,7 @@ import { AuthContext } from "@/app/contexts/AuthContext";
 import { cn } from "@/utils";
 import ProfileImage from "@/components/ProfileImage";
 import ChatMessage from "./ChatMessage";
+import { serverGetGroupMembersData } from "@/app/actions";
 
 interface GroupChatMessagesProps {
   groupData: any;
@@ -37,31 +38,14 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
   }, [groupData]);
 
   useEffect(() => {
-    if (!groupData || !user) return;
-    const members = groupData.members.filter((member) => member !== user.uid);
-    supabase
-      .from("Users")
-      .select()
-      .in("uid", members)
-      .then((res) => {
-        const membersMap = res.data?.reduce((acc, member) => {
-          return {
-            ...acc,
-            [member.uid]: {
-              firstName: member.firstName,
-              lastName: member.lastName,
-            },
-          };
-        }, {});
-        setMembersData({
-          ...membersMap,
-          [user.uid]: {
-            firstName: user.firstName,
-            lastName: user.lastName,
-          },
-        });
-      });
-  }, [groupData, user]);
+    async function getData() {
+      const membersData = await serverGetGroupMembersData(groupId);
+      setMembersData(membersData);
+    }
+    getData();
+  }, [user, groupData]);
+
+  console.log(membersData);
 
   useEffect(() => {
     const listener = supabase

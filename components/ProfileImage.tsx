@@ -1,28 +1,36 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 import { cn } from "@/utils";
 
 interface ProfileImageProps {
   user: { firstName: string; lastName: string; profilePicture?: string };
-  type?: "sm" | "md";
+  type?: "xs" | "sm" | "md";
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({ user, type = "md" }) => {
+  let fallbackClasses, imageClasses;
+  if (type === "xs") {
+    fallbackClasses = "w-3 h-3 text-xs p-3.5";
+    imageClasses = "w-4 h-4";
+  } else if (type === "sm") {
+    fallbackClasses = "w-4 h-4 text-sm p-4";
+    imageClasses = "w-4 h-4";
+  } else {
+    fallbackClasses = "w-6 h-6 p-5 text-md";
+    imageClasses = "w-6 h-6";
+  }
+
   return (
     <>
       {user.profilePicture ? (
-        <div
-          className={cn(type === "md" ? "w-6 h-6" : "w-4 h-4", "rounded-full")}
-        >
+        <div className={cn(imageClasses, "rounded-full")}>
           <Image src={user.profilePicture} alt="" fill />
         </div>
       ) : (
         <div
           className={cn(
-            type === "md" ? "w-6 h-6 p-5 text-md" : "w-4 h-4 text-sm p-4",
-            "rounded-full bg-[#bbb]  flex justify-center items-center"
+            fallbackClasses,
+            "rounded-full bg-[#bbb] flex justify-center items-center"
           )}
         >
           <span className="">
