@@ -64,16 +64,15 @@ export async function serverGetGroupMembersData(gid: string, uid?: string) {
     .from("Users")
     .select()
     .in("uid", allMembers);
-  console.log(membersData, error);
   if (!membersData) return null;
 
   if (uid) membersData = membersData.filter((member) => member.uid !== uid);
 
   const membersMap = membersData?.reduce((acc, member) => {
-    const { uid, ...rest } = member;
+    const { uid, groups, ...rest } = member;
     return {
       ...acc,
-      [uid]: rest,
+      [uid]: { ...rest, groupName: groupData.groupName },
     };
   }, {});
 
@@ -103,4 +102,65 @@ export async function serverGetMembersDataByGroups(
     };
   }, {});
   return membersMap;
+}
+
+export async function serverGetAvailableFeatherRecipients(
+  gids: string[],
+  uid: string
+) {
+  const supabase = createClient();
+  const AWAIT_sentFeathersUsers = supabase
+    .from("Feathers")
+    .select("recipient")
+    .eq("sender", uid);
+  const groupsData = await serverGetGroupsByIds(gids);
+  const { data: sentFeathersUsers } = await AWAIT_sentFeathersUsers;
+  const sentFeathersUsersList = sentFeathersUsers.map((user) => user.recipient);
+
+  groupsData?.filter((group) => group.hasMet);
+  let promises: Promise<{}>[] = [];
+  groupsData?.forEach((group) => {
+    promises.push(serverGetGroupMembersData(group.gid, uid));
+  });
+
+  const membersMaps = await Promise.all(promises);
+  console.log(membersMaps);
+  const flattenedMembersMap = membersMaps.reduce((acc, membersMap) => {
+    const filteredMembersMap = Object.entries(membersMap).reduce(
+      (acc, [key, value]) => {
+        if (!sentFeathersUsersList.includes(key))
+          return { ...acc, [key]: value };
+        else return acc;
+      },
+      {}
+    );
+    return { ...acc, ...filteredMembersMap };
+  }, {});
+
+  if (!groupsData) return null;
+
+  return flattenedMembersMap;
+}
+
+export async function serverSendFeather(
+  sender: string,
+  recipient: string,
+  message: string
+) {
+  const supabase = createClient();
+  const { data: feathersData, error: fetchError } = await supabase
+    .from("Feathers")
+    .select()
+    .eq("sender", sender)
+    .eq("recipient", recipient);
+  if (feathersData.length > 0 || fetchError) return null;
+  const { error } = await supabase.from("Feathers").insert([
+    {
+      sender,
+      recipient,
+      message,
+    },
+  ]);
+  if (!error) return 1;
+  else return null;
 }

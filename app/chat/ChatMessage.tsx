@@ -1,7 +1,7 @@
 import ProfileImage from "@/components/ProfileImage";
 import React, { useContext, useRef, useState } from "react";
 import Image from "next/image";
-import { cn } from "@/utils";
+import { cn, isIOS } from "@/utils";
 import { Reaction } from "@/types/types";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import { createClient } from "@/utils/supabase/client";
@@ -182,6 +182,12 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                 onBlur={() => {
                   setShowReactions(false);
                   setShowOptions(false);
+                }}
+                onMouseOut={() => {
+                  if (isIOS()) {
+                    setShowReactions(false);
+                    setShowOptions(false);
+                  }
                 }}
                 onClick={() => {
                   setShowReactions(!showReactions);

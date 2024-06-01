@@ -93,7 +93,7 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
   if (!chats.length || !Object.keys(membersData).length) return null;
 
   return (
-    <div className="w-full">
+    <div className="w-full overflow-x-hidden">
       {chats.map((chat, index) => (
         <ChatMessage
           chat={chat}
