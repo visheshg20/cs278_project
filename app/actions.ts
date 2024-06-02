@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
+import OpenAI from "openai";
 
 export async function serverLogout() {
   const supabase = createClient();
@@ -27,6 +28,7 @@ export async function serverGetUser() {
     .from("Users")
     .select()
     .eq("uid", user.id)
+    .limit(1)
     .single();
 
   if (userData) return userData;
@@ -39,6 +41,7 @@ export async function serverGetGroupById(gid: string) {
     .from("Groups")
     .select()
     .eq("gid", gid)
+    .limit(1)
     .single();
 
   if (groupData) return groupData;
@@ -145,22 +148,92 @@ export async function serverGetAvailableFeatherRecipients(
 export async function serverSendFeather(
   sender: string,
   recipient: string,
-  message: string
+  message: string,
+  groupName: string
 ) {
   const supabase = createClient();
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
   const { data: feathersData, error: fetchError } = await supabase
     .from("Feathers")
     .select()
     .eq("sender", sender)
     .eq("recipient", recipient);
   if (feathersData.length > 0 || fetchError) return null;
+
+  const completion = await openai.chat.completions.create({
+    messages: [
+      {
+        role: "system",
+        content: `You are a tool for content moderation, meant to check the appropriateness of messages being sent between users. Output your confidence on how appropriate a message is as a decimal value between 0 and 1. Your output should only be this number. Check the appropriateness for this message: ${message}`,
+      },
+    ],
+    model: "gpt-3.5-turbo",
+  });
+  if (completion?.choices?.[0]?.message?.content) {
+    const confidence = parseFloat(completion.choices[0].message.content);
+    if (confidence < 0.35) return { error: "That's not very nice!" };
+  }
+
   const { error } = await supabase.from("Feathers").insert([
     {
       sender,
       recipient,
       message,
+      groupName,
+      accepted: false,
     },
   ]);
-  if (!error) return 1;
+  if (!error) return { error: null };
+  else return { error: "Failed to send feather" };
+}
+
+export async function serverGetReceivedFeathers(uid: string) {
+  const supabase = createClient();
+  const { data: feathersData, error } = await supabase
+    .from("Feathers")
+    .select(`*, Users:sender (*)`)
+    .eq("recipient", uid)
+    .eq("accepted", false);
+
+  if (feathersData) return feathersData;
   else return null;
+}
+
+export async function serverCreateDM(uid1: string, uid2: string) {
+  const supabase = createClient();
+
+  const { data: DMData, error: DMError } = await supabase
+    .from("DMs")
+    .select()
+    .in("user1", [uid1, uid2])
+    .in("user2", [uid1, uid2]);
+
+  if (DMData?.length > 0) {
+    return DMData?.[0];
+  } else if (DMError) return { error: DMError };
+
+  const { data: newDMData, error } = await supabase
+    .from("DMs")
+    .upsert({
+      user1: uid1,
+      user2: uid2,
+    })
+    .select()
+    .single();
+
+  if (error) return { error: error };
+  else return newDMData;
+}
+
+export async function serverAcceptFeather(id: string) {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("Feathers")
+    .update({
+      accepted: true,
+    })
+    .eq("id", id);
+
+  return { error: error ?? null };
 }

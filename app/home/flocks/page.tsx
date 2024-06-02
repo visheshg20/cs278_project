@@ -17,7 +17,7 @@ export default async function FlocksPage() {
   const membersData = await AWAIT_membersData;
 
   return (
-    <div className="flex overflow-scroll w-full gap-5 -ml-2.5">
+    <div className="flex overflow-scroll w-screen sm:w-full gap-5 -ml-[34px]">
       {groupsData?.map((group) => (
         <Link
           href={`/chat/${group.gid}`}
