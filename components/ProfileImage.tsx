@@ -4,7 +4,7 @@ import { cn } from "@/utils";
 
 interface ProfileImageProps {
   user: { firstName: string; lastName: string; profilePicture?: string };
-  type?: "xs" | "sm" | "md";
+  type?: "xs" | "sm" | "md" | "xl";
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({ user, type = "md" }) => {
@@ -15,9 +15,12 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ user, type = "md" }) => {
   } else if (type === "sm") {
     fallbackClasses = "w-4 h-4 text-sm p-4";
     imageClasses = "w-4 h-4";
-  } else {
+  } else if (type === "md") {
     fallbackClasses = "w-6 h-6 p-5 text-md";
     imageClasses = "w-6 h-6";
+  } else {
+    fallbackClasses = "w-[100px] h-[100px] text-lg";
+    imageClasses = "w-[150px] h-[150px]";
   }
 
   return (
@@ -33,7 +36,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ user, type = "md" }) => {
             "rounded-full bg-[#bbb] flex justify-center items-center"
           )}
         >
-          <span className="">
+          <span className="!text-black">
             {user.firstName[0]}
             {user.lastName[0]}
           </span>

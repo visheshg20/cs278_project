@@ -11,12 +11,13 @@ import Link from "next/link";
 
 export default async function FlocksPage() {
   const user = await serverGetUser();
-  const groupsData = await serverGetGroupsByIds(user.groups);
-  const membersData = await serverGetMembersDataByGroups(user.groups, user.uid);
+  const AWAIT_groupsData = serverGetGroupsByIds(user.groups);
+  const AWAIT_membersData = serverGetMembersDataByGroups(user.groups, user.uid);
+  const groupsData = await AWAIT_groupsData;
+  const membersData = await AWAIT_membersData;
 
-  console.log("data", membersData);
   return (
-    <div className="flex overflow-scroll w-full gap-5 -ml-2.5">
+    <div className="flex overflow-scroll w-screen sm:w-full gap-5 -ml-[34px]">
       {groupsData?.map((group) => (
         <Link
           href={`/chat/${group.gid}`}
