@@ -37,6 +37,8 @@ const LastMessage: React.FC<LastMessageProps> = ({ group, membersData }) => {
     };
   }, []);
 
+  if (!lastMessage) return null;
+
   return (
     <p className="text-sm text-elipsis-2 ">
       {group.type === "dm"

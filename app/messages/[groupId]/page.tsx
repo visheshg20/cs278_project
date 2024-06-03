@@ -15,6 +15,7 @@ import { activitiesMap } from "@/types/types";
 import GroupMemberBios from "@/app/messages/GroupMemberBios";
 import ProfileImage from "@/components/ProfileImage";
 import DMChatMessages from "@/app/chat/DMChatMessages";
+import DMChatBar from "@/app/chat/DMChatBar";
 
 export default function ChatPage({
   params: { groupId },
@@ -46,8 +47,8 @@ export default function ChatPage({
         return setGroupData(data);
       }
     }
-    getData();
-  }, []);
+    if (user) getData();
+  }, [user]);
 
   if (!groupData || !user) return null;
   return (
@@ -106,10 +107,10 @@ export default function ChatPage({
             groupId={groupId}
           />
         ) : (
-          <DMTextBar
+          <DMChatBar
             setRepliedChat={setRepliedChat}
             repliedChat={repliedChat}
-            groupId={groupId}
+            DMId={groupId}
           />
         )}
       </div>

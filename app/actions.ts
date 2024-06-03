@@ -282,3 +282,14 @@ export const serverGetDMById = async (id: string) => {
   if (DMData) return DMData;
   else return { error: error };
 };
+export const serverPushDMMessage = async (
+  DMId: string,
+  author: string,
+  message: string
+) => {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("Chats")
+    .insert([{ DMId, author, message, reactions: "[]" }]);
+  return { error: error ?? null };
+};
