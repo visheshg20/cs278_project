@@ -21,6 +21,7 @@ interface FormData {
   activities: string[];
   groupActivitiesRankings: { [key: string]: number };
   excitementLevel: number | undefined;
+  bio: string;
 }
 
 export default function OnboardingPage() {
@@ -40,8 +41,18 @@ export default function OnboardingPage() {
     phoneNumber: "",
     values: [],
     activities: [],
-    groupActivitiesRankings: {},
-    excitementLevel: undefined,
+    groupActivitiesRankings: {
+      "Casual soccer match": -1,
+      "Super Smash Bros & Mario Kart Tournament": -1,
+      "Board Game Nights": -1,
+      "Group Hikes": -1,
+      "Rock Climbing": -1,
+      "Cooking Classes": -1,
+      "Wine & Cheese Night": -1,
+      Volunteering: -1,
+    },
+    excitementLevel: -1,
+    bio: "",
   });
 
   const handleSubmit = async () => {
@@ -100,7 +111,7 @@ export default function OnboardingPage() {
   }, {});
   const completedQuestions = Object.values(flattenedObj).filter((entry) => {
     if (typeof entry === "object") return Object.values(entry).length > 0;
-    if (typeof entry === "number") return true;
+    if (typeof entry === "number") return entry >= 0;
     return entry?.length > 0;
   }).length;
 
@@ -115,7 +126,6 @@ export default function OnboardingPage() {
   };
 
   if (user?.status === 1) router.push("/home");
-
   return (
     <div className="flex-1 w-full overflow-hidden flex justify-center relative">
       <div className="flex w-[85%] sm:w-1/2 flex-col justify-center mt-8">
@@ -169,6 +179,9 @@ export default function OnboardingPage() {
                 question={questions[questionIndex]}
                 index={questionIndex + 1}
                 isLast={questionIndex === questions.length - 1}
+                currentFormData={
+                  questions[questionIndex].field === "bio" && formData
+                }
                 value={
                   questions[questionIndex].subfield
                     ? formData[questions[questionIndex].field][

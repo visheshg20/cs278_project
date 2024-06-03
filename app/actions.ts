@@ -242,3 +242,19 @@ export async function serverAcceptFeather(id: string) {
 
   return { error: error ?? null };
 }
+
+export async function serverGenerateBio(userObject: { [key: string]: string }) {
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const completion = await openai.chat.completions.create({
+    messages: [
+      {
+        role: "system",
+        content: `Generate a fun bio written in first person that is no longer than 50 words for a user based on the following information. Make the bio encapsulate what this person would be like, not necessarily directly reflecting values shown in the object directly. Avoid directly quoting numbers from the object as well. Add in 1 or 2 emojis as well at the end. \n ${JSON.stringify(
+          userObject
+        )}`,
+      },
+    ],
+    model: "gpt-3.5-turbo",
+  });
+  return { bio: completion.choices[0].message.content };
+}

@@ -10,5 +10,9 @@ export default async function MessagesPage() {
   // }
 
   // return redirect("/home/flocks");
-  return <div>pick a chat!</div>;
+  return (
+    <div className="text-white w-full min-h-full flex-1 flex items-center justify-center ">
+      Select a chat!
+    </div>
+  );
 }

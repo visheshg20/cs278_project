@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/utils";
 import range from "lodash/range";
+import TextareaInput from "@/app/onboarding/TextareaInput";
+import GenerateBioButton from "@/app/onboarding/GenerateBioButton";
+import { rest } from "lodash";
+import { serverGenerateBio } from "@/app/actions";
 
 interface FullScreenQuestionProps {
   question: {
@@ -10,6 +14,7 @@ interface FullScreenQuestionProps {
     options?: string[];
     validation: (input: any) => string;
   };
+  currentFormData?: any;
   index: number;
   isLast?: boolean;
   value: any;
@@ -20,6 +25,7 @@ const FullScreenQuestion: React.FC<FullScreenQuestionProps> = ({
   question,
   index,
   onAnswer,
+  currentFormData,
   value,
   isLast,
 }) => {
@@ -48,15 +54,21 @@ const FullScreenQuestion: React.FC<FullScreenQuestionProps> = ({
   };
 
   const handleNumericalChange = (e) => {
-    if (response === e.target.value) setResponse(undefined);
+    if (response === e.target.value) setResponse(-1);
     else if (e.target.value) setResponse(e.target.value);
+  };
+
+  const generateBio = async () => {
+    const { groupActivitiesRankings, phoneNumber, ...rest } = currentFormData;
+    const { bio } = await serverGenerateBio(rest);
+    setResponse(bio);
   };
 
   let inputElem;
   if (question.type === "text") {
     inputElem = (
       <input
-        className="bg-transparent border-b-[1.5px] border-white drop-shadow-md !text-base px-3 py-2 outline-none transition-all focus:bg-[rgba(255,255,255,0.3)] focus:border-b-[3px]"
+        className="bg-transparent border-b-[1.5px] border-white drop-shadow-md !text-base px-3 py-2 outline-none transition-all focus:bg-[rgba(255,255,255,0.2)] focus:border-b-[3px]"
         type="text"
         value={response}
         onKeyDown={(e) => {
@@ -146,6 +158,18 @@ const FullScreenQuestion: React.FC<FullScreenQuestionProps> = ({
         ))}
       </div>
     );
+  } else if (question.type === "textarea") {
+    inputElem = (
+      <TextareaInput
+        value={response}
+        setValue={handleTextChange}
+        onKeyDown={(e) => {
+          if (e.code === "Enter") {
+            handleSubmit();
+          }
+        }}
+      />
+    );
   }
 
   return (
@@ -159,24 +183,31 @@ const FullScreenQuestion: React.FC<FullScreenQuestionProps> = ({
           {question.question}
           {inputElem}
           <p className="text-sm text-red-500">{error}</p>
-          <button
-            className={cn(
-              response ? "bg-purple-500" : "bg-gray-400",
-              "text-base py-2 px-4 pr-3 w-fit rounded-md self-end mt-5 flex items-center gap-2"
+          <div className="flex gap-4 justify-end">
+            {question.field === "bio" && (
+              <GenerateBioButton onClick={generateBio} />
             )}
-            disabled={!response}
-            onClick={handleSubmit}
-          >
-            {isLast ? (
-              <>
-                Finish <Image src="/done.svg" alt="" width={16} height={12} />
-              </>
-            ) : (
-              <>
-                Next <Image src="/arrow.svg" alt="" width={16} height={12} />
-              </>
-            )}
-          </button>
+            <button
+              className={cn(
+                !response || response.length === 0 || response < 0
+                  ? "bg-gray-400"
+                  : "bg-purple-500",
+                "text-base py-2 px-4 pr-3 w-fit rounded-md self-end mt-5 flex items-center gap-2"
+              )}
+              disabled={!response || response.length === 0 || response < 0}
+              onClick={handleSubmit}
+            >
+              {isLast ? (
+                <>
+                  Finish <Image src="/done.svg" alt="" width={16} height={12} />
+                </>
+              ) : (
+                <>
+                  Next <Image src="/arrow.svg" alt="" width={16} height={12} />
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -20,7 +20,7 @@ export default async function FlocksPage() {
     <div className="flex overflow-scroll w-screen sm:w-full gap-5 -ml-[34px]">
       {groupsData?.map((group) => (
         <Link
-          href={`/chat/${group.gid}`}
+          href={`/messages/${group.gid}`}
           className="flex flex-col shrink-0 hover:bg-[rgba(255,255,255,0.3)] cursor-pointer p-2.5 text-white"
         >
           <div className="relative">
