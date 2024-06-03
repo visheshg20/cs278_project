@@ -30,7 +30,11 @@ export default function AppWithProviders({
           <Link href="/messages" className="w-8 h-8">
             <Image alt="" src="/messages.svg" width={30} height={30} />
           </Link>
-          {user && <ProfileImage user={user} />}
+          {user && (
+            <Link href={`/profiles/${user.uid}`}>
+              <ProfileImage user={user} />
+            </Link>
+          )}
           <LogoutButton />
         </div>
       );
