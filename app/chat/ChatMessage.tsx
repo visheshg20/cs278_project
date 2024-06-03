@@ -8,6 +8,7 @@ import { createClient } from "@/utils/supabase/client";
 
 interface ChatMessageProps {
   chat: any;
+  groupName: string;
   member: any;
   authorIsUser: boolean;
   prevAuthorIsSame: boolean;
@@ -18,6 +19,7 @@ interface ChatMessageProps {
 const ChatMessage: React.FC<ChatMessageProps> = ({
   chat,
   member,
+  groupName,
   authorIsUser,
   prevAuthorIsSame,
   nextAuthorIsSame,
@@ -28,6 +30,67 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   const reactionRef = useRef<HTMLButtonElement>(null);
   const { user } = useContext(AuthContext);
   const supabase = createClient();
+
+  const renderSpecialChat = (chat: any) => {
+    if (chat.special === "schedule") {
+      const date = new Date(chat.message);
+      const padZero = (num: number) => num.toString().padStart(2, "0");
+
+      const year = date.getFullYear();
+      const month = padZero(date.getMonth() + 1); // Months are zero-based
+      const day = padZero(date.getDate());
+      const startHours = padZero(date.getHours());
+      const endHours = padZero(date.getHours() + 2);
+      const minutes = padZero(date.getMinutes());
+      const seconds = padZero(date.getSeconds());
+
+      const timeString1 = `${year}${month}${day}T${startHours}${minutes}${seconds}`;
+      const timeString2 = `${year}${month}${day}T${endHours}${minutes}${seconds}`;
+
+      return (
+        <div className="text-center text-sm flex flex-col justify-center text-[#8A6697] py-3">
+          <p className="">
+            Congrats! You've scheduled your flock meetup for <br />
+            {date.toLocaleString("en-US", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+              hour: "numeric",
+              minute: "2-digit",
+              hour12: true,
+            })}{" "}
+            <br />
+          </p>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${groupName.replace(
+              " ",
+              "+"
+            )}+Flock+Meetup&dates=${timeString1}/${timeString2}&ctz=America/Los_Angeles`}
+            className=" text-blue-500"
+          >
+            Calendar Link
+          </a>
+        </div>
+      );
+    } else if (chat.special === "icebreaker") {
+      return (
+        <div className="text-center text-2xl flex flex-col items-center justify-center text-white py-3">
+          <h1 className="">
+            Break the ice!
+            <br />
+          </h1>
+          <Image src="/icebreaker.png" alt="" width={100} height={100} />
+          <p className="text-sm text-[#8A6697] pt-1">{chat.message}</p>
+        </div>
+      );
+    }
+  };
+
+  if (chat.special) {
+    return renderSpecialChat(chat);
+  }
 
   const reactions = JSON.parse(chat.reactions);
   const reply = chat.reply ? JSON.parse(chat.reply) : null;

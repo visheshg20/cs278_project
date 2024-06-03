@@ -60,8 +60,8 @@ export default function ChatPage({
             alt=""
             className="rounded-full"
             src={activitiesMap[groupData.activity].image}
-            height={100}
-            width={100}
+            height={60}
+            width={60}
           />
         )}
         {groupData.type === "dm" && memberData ? (
@@ -69,7 +69,13 @@ export default function ChatPage({
             {memberData.firstName} {memberData.lastName}
           </h2>
         ) : (
-          <h2 className="text-white text-2xl">{groupData.groupName}</h2>
+          <div>
+            <h2 className="text-white text-2xl">{groupData.groupName}</h2>
+            <p className="text-xs text-gray-500">
+              use /schedule to let us know you’ve scheduled a meet and the timer
+              will stop!
+            </p>
+          </div>
         )}
       </div>
       <div className="flex-1 rounded-xl flex flex-col">

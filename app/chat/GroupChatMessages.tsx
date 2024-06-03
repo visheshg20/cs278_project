@@ -100,6 +100,7 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
       {chats.map((chat, index) => (
         <ChatMessage
           key={chat.cid}
+          groupName={groupData.groupName}
           chat={chat}
           member={membersData[chat.author]}
           authorIsUser={chat.author === user.uid}

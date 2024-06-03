@@ -29,3 +29,5 @@ export const icebreakers = [
   "Imagine you wake up one day as the 14th President of Stanford— what would you change/implement first? Be as nonserious as possible.",
   "If you could teach a class at Stanford, what would you teach/what would the course be called?",
 ];
+
+export const adminUser = "00000000-0000-0000-0000-000000000000";
