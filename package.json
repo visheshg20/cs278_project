@@ -43,7 +43,6 @@
     "eslint-plugin-react": "^7.34.1",
     "globals": "^15.3.0",
     "install": "^0.13.0",
-    "npm": "^10.7.0",
     "supabase": "^1.165.0",
     "typescript-eslint": "^7.10.0"
   }

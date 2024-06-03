@@ -90,7 +90,6 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
   });
 
   useEffect(() => {
-    console.log(scrollRef.current);
     scrollRef.current?.scrollIntoView({ behavior: "instant", block: "end" });
   }, [chats, scrollRef.current]);
 
@@ -101,6 +100,7 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
       {chats.map((chat, index) => (
         <ChatMessage
           key={chat.cid}
+          groupName={groupData.groupName}
           chat={chat}
           member={membersData[chat.author]}
           authorIsUser={chat.author === user.uid}

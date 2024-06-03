@@ -33,7 +33,6 @@ const FullScreenQuestion: React.FC<FullScreenQuestionProps> = ({
   const [error, setError] = useState("");
 
   const handleSubmit = (event?: React.FormEvent) => {
-    // console.log(question.validation(response));
     if (!question.validation(response)) onAnswer(response);
     else setError(question.validation(response));
   };

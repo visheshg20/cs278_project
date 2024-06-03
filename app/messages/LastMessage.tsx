@@ -12,7 +12,6 @@ const LastMessage: React.FC<LastMessageProps> = ({ group, membersData }) => {
   const supabase = createClient();
   const [lastMessage, setLastMessage] = useState(group.lastMessage);
   useEffect(() => {
-    console.log("listening");
     const listener = supabase
       .channel("table-db-changes")
       .on(
@@ -20,13 +19,12 @@ const LastMessage: React.FC<LastMessageProps> = ({ group, membersData }) => {
         {
           event: "*",
           schema: "public",
-          table: "Groups",
-          filter: `gid=eq.${group.gid}`,
+          table: group.type === "dm" ? "DMs" : "Groups",
+          filter:
+            group.type === "dm" ? `id=eq.${group.id}` : `gid=eq.${group.gid}`,
         },
         (payload) => {
-          console.log(payload);
           if (payload.eventType === "UPDATE") {
-            console.log(payload.new);
             setLastMessage(payload.new.lastMessage);
           }
         }
@@ -38,11 +36,14 @@ const LastMessage: React.FC<LastMessageProps> = ({ group, membersData }) => {
       listener.unsubscribe();
     };
   }, []);
-  const author = membersData[lastMessage.author];
 
   return (
     <p className="text-sm text-elipsis-2 ">
-      {author.firstName} {author.lastName[0]}: {lastMessage.message}
+      {group.type === "dm"
+        ? lastMessage?.message
+        : `${membersData[lastMessage.author].firstName} ${
+            membersData[lastMessage.author].lastName[0]
+          }: ${lastMessage.message}`}{" "}
     </p>
   );
 };

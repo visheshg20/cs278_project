@@ -30,12 +30,10 @@ export default function ChatPage({
 
   useEffect(() => {
     if (!scrollRef.current) return;
-    console.log(scrollRef.current);
     scrollRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [scrollRef.current]);
 
   const emojiMap = { Bowling: "🎳", Cooking: "🍳" };
-  console.log(groupData, user);
   if (!groupData || !user) return null;
   return (
     <div className="flex-1 w-full flex flex-col gap-20 items-center">

@@ -20,7 +20,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ user, type = "md" }) => {
     imageClasses = "w-6 h-6";
   } else {
     fallbackClasses = "w-[100px] h-[100px] text-lg";
-    imageClasses = "w-[150px] h-[150px]";
+    imageClasses = "w-[100px] h-[100px]";
   }
 
   return (
