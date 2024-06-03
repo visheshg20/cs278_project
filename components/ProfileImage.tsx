@@ -4,7 +4,7 @@ import { cn } from "@/utils";
 
 interface ProfileImageProps {
   user: { firstName: string; lastName: string; profilePicture?: string };
-  type?: "xs" | "sm" | "md" | "xl";
+  type?: "xs" | "sm" | "md" | "lg" | "xl";
 }
 
 const ProfileImage: React.FC<ProfileImageProps> = ({ user, type = "md" }) => {

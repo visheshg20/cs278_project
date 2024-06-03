@@ -82,8 +82,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
     >
       {Object.keys(Reaction)
         .filter((key) => isNaN(Number(key)))
-        .map((key) => (
+        .map((key, index) => (
           <div
+            key={`${key}-${index}`}
             className={cn(
               userReaction?.reaction === key && "bg-gray-300",
               "text-[2rem] rounded-full px-0.5 h-fit"
@@ -151,7 +152,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
           </div>
         )}
         <div className={authorIsUser ? "flex flex-row-reverse" : "flex"}>
-          <p
+          <div
             className={cn(
               authorIsUser ? "bg-blue-600" : "bg-gray-500",
               "px-3 py-1 text-white rounded-2xl text-md max-w-[70%] relative "
@@ -168,7 +169,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                 {reactions.length > 1 && reactions.length} {getEmojiString()}
               </div>
             )}
-          </p>
+          </div>
           {showOptions && (
             <div
               className={cn(

@@ -35,16 +35,16 @@ export default function ChatPage({
   }, [scrollRef.current]);
 
   const emojiMap = { Bowling: "🎳", Cooking: "🍳" };
-
+  console.log(groupData, user);
   if (!groupData || !user) return null;
   return (
     <div className="flex-1 w-full flex flex-col gap-20 items-center">
       <main className="flex-1 w-full sm:w-4/5 animate-in opacity-0 flex flex-col gap-6 px-0 sm:px-6 py-6">
         <div className="flex gap-4 items-center justify-start">
-          <div className="bg-purple-300 flex justify-center items-center w-24	h-24 text-4xl rounded-full">
+          <div className="bg-purple-300 flex justify-center items-center w-6 h-6 text-4xl rounded-full">
             {emojiMap[groupData.hobby]}
           </div>
-          <h2 className="font-bold text-black text-4xl">
+          <h2 className="font-bold text-black text-xl">
             {groupData.groupName}
           </h2>
         </div>

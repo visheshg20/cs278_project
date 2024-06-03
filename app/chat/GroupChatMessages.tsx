@@ -1,7 +1,7 @@
 "use client";
 
 import { createClient } from "@/utils/supabase/client";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import { cn } from "@/utils";
 import ProfileImage from "@/components/ProfileImage";
@@ -24,6 +24,7 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
 
   const [chats, setChats] = useState([]);
   const [membersData, setMembersData] = useState({});
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!groupData || chats.length > 0) return;
@@ -44,8 +45,6 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
     }
     getData();
   }, [user, groupData]);
-
-  console.log(membersData);
 
   useEffect(() => {
     const listener = supabase
@@ -90,12 +89,18 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
     };
   });
 
+  useEffect(() => {
+    console.log(scrollRef.current);
+    scrollRef.current?.scrollIntoView({ behavior: "instant", block: "end" });
+  }, [chats, scrollRef.current]);
+
   if (!chats.length || !Object.keys(membersData).length) return null;
 
   return (
     <div className="w-full overflow-x-hidden">
       {chats.map((chat, index) => (
         <ChatMessage
+          key={chat.cid}
           chat={chat}
           member={membersData[chat.author]}
           authorIsUser={chat.author === user.uid}
@@ -104,6 +109,7 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
           setRepliedChat={setRepliedChat}
         />
       ))}
+      <div ref={scrollRef} />
     </div>
   );
 };

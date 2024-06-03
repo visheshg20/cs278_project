@@ -114,6 +114,8 @@ export default function OnboardingPage() {
     }
   };
 
+  if (user?.status === 1) router.push("/home");
+
   return (
     <div className="flex-1 w-full overflow-hidden flex justify-center relative">
       <div className="flex w-[85%] sm:w-1/2 flex-col justify-center mt-8">

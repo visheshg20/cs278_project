@@ -17,6 +17,19 @@ export async function serverGetAuth() {
   else return null;
 }
 
+export async function serverGetUserByUid(uid: string) {
+  const supabase = createClient();
+  const { data: userData, error } = await supabase
+    .from("Users")
+    .select()
+    .eq("uid", uid)
+    .limit(1)
+    .single();
+
+  if (userData) return userData;
+  else return null;
+}
+
 export async function serverGetUser() {
   const supabase = createClient();
   const {
@@ -24,15 +37,7 @@ export async function serverGetUser() {
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const { data: userData, error } = await supabase
-    .from("Users")
-    .select()
-    .eq("uid", user.id)
-    .limit(1)
-    .single();
-
-  if (userData) return userData;
-  else return null;
+  return await serverGetUserByUid(user.id);
 }
 
 export async function serverGetGroupById(gid: string) {

@@ -36,6 +36,14 @@ body {
   text-overflow: ellipsis;
 }
 
+.text-elipsis-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @keyframes Gradient {
   0% {
     background-position: 100% 0%;
