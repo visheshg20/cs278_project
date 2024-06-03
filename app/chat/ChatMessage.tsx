@@ -5,6 +5,7 @@ import { cn, isIOS } from "@/utils";
 import { Reaction } from "@/types/types";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import { createClient } from "@/utils/supabase/client";
+import Link from "next/link";
 
 interface ChatMessageProps {
   chat: any;
@@ -177,7 +178,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
         {nextAuthorIsSame ? (
           <div className="p-4"></div>
         ) : (
-          <ProfileImage user={member} type="sm" />
+          <Link href={`/profiles/${chat.author}`}>
+            <ProfileImage user={member} type="sm" />
+          </Link>
         )}
       </div>
       <div className="relative w-full">

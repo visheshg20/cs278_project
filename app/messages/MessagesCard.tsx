@@ -43,7 +43,7 @@ const MessagesCard: React.FC<MessagesCardProps> = ({ group }) => {
       )}
     >
       {group.type === "dm" ? (
-        <ProfileImage user={membersData} type="lg" />
+        <ProfileImage user={membersData} type="xl" />
       ) : (
         <Image
           alt=""

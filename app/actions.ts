@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/utils/supabase/server";
+import { error } from "console";
 import OpenAI from "openai";
 
 export async function serverLogout() {
@@ -292,4 +293,17 @@ export const serverPushDMMessage = async (
     .from("Chats")
     .insert([{ DMId, author, message, reactions: "[]" }]);
   return { error: error ?? null };
+};
+
+export const serverGetUserAndSurveyByUid = async (uid: string) => {
+  const supabase = createClient();
+  const { data: userData, error } = await supabase
+    .from("Survey")
+    .select(`* , Users (*)`)
+    .eq("uid", uid)
+    .limit(1)
+    .single();
+
+  if (userData) return userData;
+  else return { error: error };
 };

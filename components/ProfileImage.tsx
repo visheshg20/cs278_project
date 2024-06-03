@@ -18,6 +18,9 @@ const ProfileImage: React.FC<ProfileImageProps> = ({ user, type = "md" }) => {
   } else if (type === "md") {
     fallbackClasses = "w-6 h-6 p-5 text-md";
     imageClasses = "w-6 h-6";
+  } else if (type === "lg") {
+    fallbackClasses = "w-[60px] h-[60px] text-lg p-6";
+    imageClasses = "w-[60px] h-[60px]";
   } else {
     fallbackClasses = "w-[100px] h-[100px] text-lg";
     imageClasses = "w-[100px] h-[100px]";
