@@ -76,7 +76,7 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
         isReactionOnRight()
           ? "-left-4 origin-bottom-left"
           : "-right-4 origin-bottom-right",
-        "absolute flex bg-white px-2 py-1 rounded-full bottom-8 transition-transform transition-duration-350 scale-0 z-[15]",
+        "absolute flex bg-white px-2 py-1 rounded-full bottom-8 transition-transform transition-duration-350 scale-0 z-20",
         showReactions && "scale-100"
       )}
     >

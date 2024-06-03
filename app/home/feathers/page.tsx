@@ -18,8 +18,6 @@ export default async function HomePage() {
   const receivedFeathers = await serverGetReceivedFeathers(user.uid);
   if (!receivedFeathers || !membersMap) return null;
 
-  console.log("feathers", receivedFeathers);
-
   return (
     <div className="flex flex-col gap-3">
       <h1 className="text-[26px] text-white">Send a Feather!</h1>

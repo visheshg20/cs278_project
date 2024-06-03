@@ -31,7 +31,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const headerURL = headers().get("x-url");
-  // console.log(headerURL);
 
   return (
     <html lang="en" className={cn(poppins.variable, GeistSans.className)}>

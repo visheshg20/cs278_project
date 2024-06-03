@@ -61,7 +61,7 @@ export async function serverGetGroupsByIds(gids: string[]) {
     .in("gid", gids);
 
   if (groupData) return groupData;
-  else return null;
+  else return { error: error };
 }
 
 export async function serverGetGroupMembersData(gid: string, uid?: string) {
@@ -258,3 +258,27 @@ export async function serverGenerateBio(userObject: { [key: string]: string }) {
   });
   return { bio: completion.choices[0].message.content };
 }
+
+export const serverGetDMsByUser = async (uid: string) => {
+  const supabase = createClient();
+  const { data: DMData, error } = await supabase
+    .from("DMs")
+    .select()
+    .or(`user2.eq.${uid},user1.eq.${uid}`);
+
+  if (DMData) return DMData;
+  else return { error: error };
+};
+
+export const serverGetDMById = async (id: string) => {
+  const supabase = createClient();
+  const { data: DMData, error } = await supabase
+    .from("DMs")
+    .select()
+    .eq("id", id)
+    .limit(1)
+    .single();
+
+  if (DMData) return DMData;
+  else return { error: error };
+};

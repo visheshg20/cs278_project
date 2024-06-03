@@ -90,7 +90,6 @@ const GroupChatMessages: React.FC<GroupChatMessagesProps> = ({
   });
 
   useEffect(() => {
-    console.log(scrollRef.current);
     scrollRef.current?.scrollIntoView({ behavior: "instant", block: "end" });
   }, [chats, scrollRef.current]);
 

@@ -205,7 +205,6 @@ export default function OnboardingPage() {
                     });
                   }
                   handleQuestionChange(1);
-                  console.log(completedQuestions, questions.length - 1);
                   if (completedQuestions >= questions.length - 1) {
                     console.log("Submitting form");
                     handleSubmit();
