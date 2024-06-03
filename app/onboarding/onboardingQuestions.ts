@@ -149,6 +149,16 @@ export const questions: {
     },
     range: [1, 5],
   },
+  {
+    field: "bio",
+    type: "textarea",
+    table: "Users",
+    question:
+      "Give us a little bio about yourself to share with others! (~50 words)",
+    validation: (input: string) => {
+      return input.length < 25 ? "Tell us just a biiiit more :D" : "";
+    },
+  },
 
   ...rankQuestions,
 ];

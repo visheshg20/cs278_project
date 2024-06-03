@@ -24,11 +24,11 @@ export default function AppWithProviders({
     if (session && path !== "/onboarding" && path !== "/survey") {
       return (
         <div className="h-full flex justify-center items-center gap-4 px-4">
-          <Link href="/home">
-            <IconHome width={30} height={30} />
+          <Link href="/home" className="w-8 h-8">
+            <Image alt="" src="/home.svg" width={30} height={30} />
           </Link>
-          <Link href="/notifications">
-            <IconBell width={30} height={30} />
+          <Link href="/messages" className="w-8 h-8">
+            <Image alt="" src="/messages.svg" width={30} height={30} />
           </Link>
           {user && <ProfileImage user={user} />}
           <LogoutButton />

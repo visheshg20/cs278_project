@@ -70,7 +70,7 @@ const ChatTextBar: React.FC<ChatTextBarProps> = ({
 
         <input
           ref={inputRef}
-          className="rounded-full h-10 px-4 min-w-full relative z-[1]"
+          className="rounded-full h-10 pl-4 pr-10 min-w-full relative z-[1]"
           type="text"
           value={text}
           onChange={(e) => {

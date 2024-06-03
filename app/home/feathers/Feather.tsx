@@ -61,8 +61,10 @@ const Feather: React.FC<FeatherProps> = ({ member }) => {
             " text-sm text-white py-1 px-3 pr-3 w-fit rounded-md flex items-center gap-2"
           )}
           onClick={async () => {
-            if (!messageView && !messageSent) setMessageView(true);
-            else if (messageView && !messageSent) {
+            if (!messageView && !messageSent) {
+              if (textRef.current) textRef.current.focus();
+              setMessageView(true);
+            } else if (messageView && !messageSent) {
               if (!message) return setMessageError("Please enter a message!");
               const res = await serverSendFeather(
                 user.uid,
