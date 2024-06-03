@@ -3,10 +3,14 @@
 import ProfileImage from "@/components/ProfileImage";
 import { cn } from "@/utils";
 import Image from "next/image";
-import { serverCreateDM, serverAcceptFeather } from "@/app/actions";
+import {
+  serverCreateDM,
+  serverAcceptFeather,
+  serverPushDMMessage,
+} from "@/app/actions";
 import React, { useState, useLayoutEffect, useContext } from "react";
 import { AuthContext } from "@/app/contexts/AuthContext";
-import { set } from "lodash";
+import { useRouter } from "next/navigation";
 
 interface ReceivedFeatherProps {
   feather: any;
@@ -17,11 +21,17 @@ const ReceivedFeather: React.FC<ReceivedFeatherProps> = ({ feather }) => {
   const [expandText, setExpandText] = useState(false);
   const [errorMessage, setErrorMessage] = useState(false);
 
+  const router = useRouter();
+
   const acceptFeather = async () => {
     const newDM = await serverCreateDM(feather.Users.uid, user.uid);
     if (newDM.error) return setErrorMessage(newDM.error);
     const featherUpdate = await serverAcceptFeather(feather.id);
     if (featherUpdate.error) return setErrorMessage(featherUpdate.error);
+
+    await serverPushDMMessage(newDM.id, feather.Users.uid, feather.message);
+
+    router.push(`/messages/${newDM.id}`);
   };
 
   return (
@@ -43,15 +53,17 @@ const ReceivedFeather: React.FC<ReceivedFeatherProps> = ({ feather }) => {
         onClick={() => setExpandText(true)}
       >
         {feather.message}{" "}
-        <span
-          className="font-semibold cursor-pointer"
-          onClick={(e) => {
-            e.stopPropagation();
-            setExpandText(false);
-          }}
-        >
-          Show less
-        </span>
+        {expandText && (
+          <span
+            className="font-semibold cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              setExpandText(false);
+            }}
+          >
+            Show less
+          </span>
+        )}
       </div>
       {errorMessage && <p className="text-red-500 text-sm">{errorMessage}</p>}
       <button
