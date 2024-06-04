@@ -1,5 +1,6 @@
 "use client";
 
+import { isIOS } from "@/utils";
 import React, { useEffect, useState } from "react";
 import { activitiesMap } from "@/types/types";
 import Image from "next/image";
@@ -30,6 +31,7 @@ const MessagesCard: React.FC<MessagesCardProps> = ({ group }) => {
     fetchMembersData();
   }, []);
   const convoId = usePathname().split("/").splice(-1)[0];
+  const isViewingChat = convoId !== "messages";
 
   if (membersData === null) return null;
   return (
@@ -54,7 +56,12 @@ const MessagesCard: React.FC<MessagesCardProps> = ({ group }) => {
         />
       )}
 
-      <div className="text-white flex-col justify-around py-2 hidden lg:flex">
+      <div
+        className={cn(
+          !isViewingChat && isIOS() ? "flex" : "hidden",
+          "text-white flex-col justify-around py-2  lg:flex"
+        )}
+      >
         <div>
           <div className="text-lg">
             {group.type === "dm"
