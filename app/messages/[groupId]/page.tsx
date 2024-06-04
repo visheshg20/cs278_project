@@ -67,7 +67,9 @@ export default function ChatPage({
         )}
       >
         {groupData.type === "dm" && memberData ? (
-          <ProfileImage user={memberData} type="lg" />
+          <Link href={`/profiles/${memberData.uid}`}>
+            <ProfileImage user={memberData} type="lg" />
+          </Link>
         ) : (
           <Image
             alt=""

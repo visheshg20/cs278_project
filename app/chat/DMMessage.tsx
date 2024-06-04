@@ -5,6 +5,7 @@ import { cn, isIOS } from "@/utils";
 import { Reaction } from "@/types/types";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import { createClient } from "@/utils/supabase/client";
+import Link from "next/link";
 
 interface DMMessageProps {
   chat: any;
@@ -133,7 +134,9 @@ const DMMessage: React.FC<DMMessageProps> = ({
         {nextAuthorIsSame ? (
           <div className="p-4"></div>
         ) : (
-          <ProfileImage user={member} type="sm" />
+          <Link href={`/profiles/${member.uid}`}>
+            <ProfileImage user={member} type="sm" />
+          </Link>
         )}
       </div>
       <div className="relative w-full">
