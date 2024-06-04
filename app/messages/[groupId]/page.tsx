@@ -6,6 +6,7 @@ import Image from "next/image";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import ChatTextBar from "@/app/chat/ChatTextBar";
 import GroupChatMessages from "@/app/chat/GroupChatMessages";
+import { cn, isIOS } from "@/utils";
 import {
   serverGetDMById,
   serverGetUserByUid,
@@ -16,6 +17,7 @@ import GroupMemberBios from "@/app/messages/GroupMemberBios";
 import ProfileImage from "@/components/ProfileImage";
 import DMChatMessages from "@/app/chat/DMChatMessages";
 import DMChatBar from "@/app/chat/DMChatBar";
+import Link from "next/link";
 
 export default function ChatPage({
   params: { groupId },
@@ -52,8 +54,18 @@ export default function ChatPage({
 
   if (!groupData || !user) return null;
   return (
-    <div className="flex-1 w-full sm:w-4/5 animate-in opacity-0 flex flex-col gap-3 px-0">
-      <div className="flex gap-4 items-center justify-start">
+    <div className="flex-1 w-full sm:w-4/5 animate-in opacity-0 flex flex-col gap-3 px-0 relative">
+      {isIOS() && (
+        <Link className="text-sm absolute -top-2" href="/messages">
+          {"< Back"}
+        </Link>
+      )}
+      <div
+        className={cn(
+          isIOS() && "pt-4",
+          "flex gap-4 items-center justify-start"
+        )}
+      >
         {groupData.type === "dm" && memberData ? (
           <ProfileImage user={memberData} type="lg" />
         ) : (
