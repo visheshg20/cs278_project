@@ -45,39 +45,39 @@ export default function Login({
       return redirect("/login?message=Email is invalid");
     }
 
-    console.log(origin);
+    console.log(`${origin}/auth/callback`);
 
-    // const { data: authData, error: authError } = await supabase.auth.signUp({
-    //   email,
-    //   password,
-    //   options: {
-    //     emailRedirectTo: `${origin}/auth/callback`,
-    //   },
-    // });
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${origin}/auth/callback`,
+      },
+    });
 
-    // if (authError ?? !authData.user) {
-    //   console.error(authError);
-    //   return redirect("/login?message=Could not authenticate user");
-    // }
+    if (authError ?? !authData.user) {
+      console.error(authError);
+      return redirect("/login?message=Could not authenticate user");
+    }
 
-    // const { error: userCreationError } = await supabase.from("Users").insert({
-    //   uid: authData.user.id,
-    //   email: email,
-    //   firstName: null,
-    //   lastName: null,
-    //   prefName: null,
-    //   studentStatus: null,
-    //   groups: null,
-    //   status: 0,
-    //   school: "Stanford University",
-    // });
+    const { error: userCreationError } = await supabase.from("Users").insert({
+      uid: authData.user.id,
+      email: email,
+      firstName: null,
+      lastName: null,
+      prefName: null,
+      studentStatus: null,
+      groups: null,
+      status: 0,
+      school: "Stanford University",
+    });
 
-    // if (userCreationError) {
-    //   console.log(userCreationError);
-    //   return redirect("/login?message=Could not create new user");
-    // }
+    if (userCreationError) {
+      console.log(userCreationError);
+      return redirect("/login?message=Could not create new user");
+    }
 
-    // return redirect("/login?message=Check email to continue sign in process");
+    return redirect("/login?message=Check email to continue sign in process");
   };
 
   return (
