@@ -168,13 +168,13 @@ export default function OnboardingPage() {
                 opacity: { duration: 0.2 },
               }}
               className="h-full"
-              drag="y"
-              dragConstraints={{ top: 0, bottom: 0 }}
-              onDragEnd={(_, dragInfo) => {
-                if (Math.abs(dragInfo.velocity.y) > 50) {
-                  handleQuestionChange(-Math.sign(dragInfo.velocity.y));
-                }
-              }}
+              // drag="y"
+              // dragConstraints={{ top: 0, bottom: 0 }}
+              // onDragEnd={(_, dragInfo) => {
+              //   if (Math.abs(dragInfo.velocity.y) > 50) {
+              //     handleQuestionChange(-Math.sign(dragInfo.velocity.y));
+              //   }
+              // }}
             >
               <FullScreenQuestion
                 question={questions[questionIndex]}
