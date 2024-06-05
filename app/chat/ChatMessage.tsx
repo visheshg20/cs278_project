@@ -6,6 +6,7 @@ import { Reaction } from "@/types/types";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
+import { padZero } from "@/utils";
 
 interface ChatMessageProps {
   chat: any;
@@ -35,7 +36,6 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
   const renderSpecialChat = (chat: any) => {
     if (chat.special === "schedule") {
       const date = new Date(chat.message);
-      const padZero = (num: number) => num.toString().padStart(2, "0");
 
       const year = date.getFullYear();
       const month = padZero(date.getMonth() + 1); // Months are zero-based

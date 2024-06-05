@@ -8,12 +8,13 @@ import { activitiesMap } from "@/types/types";
 import { format } from "timeago.js";
 import ProfileImage from "@/components/ProfileImage";
 import Link from "next/link";
+import UpcomingFlock from "./UpcomingFlock";
 
 export default async function FlocksPage() {
   const user = await serverGetUser();
   const AWAIT_groupsData = serverGetGroupsByIds(user.groups);
   const AWAIT_membersData = serverGetMembersDataByGroups(user.groups, user.uid);
-  const groupsData = await AWAIT_groupsData;
+  let groupsData = await AWAIT_groupsData;
   const membersData = await AWAIT_membersData;
 
   return (
@@ -52,6 +53,7 @@ export default async function FlocksPage() {
           </p>
         </Link>
       ))}
+      <UpcomingFlock />
     </div>
   );
 }

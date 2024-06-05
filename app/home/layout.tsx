@@ -1,4 +1,4 @@
-import { cn } from "@/utils";
+import { cn, getNextWednesdayAt6PM } from "@/utils";
 import { createClient } from "@/utils/supabase/server";
 import { headers } from "next/headers";
 import { serverGetUser } from "@/app/actions";
@@ -25,6 +25,12 @@ export default async function HomeLayout({
     return redirect("/onboarding");
   }
 
+  const nextRelease = getNextWednesdayAt6PM();
+  const now = new Date();
+  const diffInHours = (nextRelease - now) / 1000 / 60 / 60;
+  const diffInDays = Math.floor(diffInHours / 24);
+  const remainingHours = Math.floor(diffInHours % 24);
+
   return (
     <div className="flex-1 w-full flex flex-col gap-20 items-center">
       <main className="flex-1 w-[95%] sm:w-4/5 animate-in opacity-0 flex flex-col gap-4 p-6 font-poppins">
@@ -32,7 +38,8 @@ export default async function HomeLayout({
           Welcome Back, {user.firstName}
         </h2>
         <h4 className=" text-[#8A6697] text-lg mb-4 self-start">
-          Next flocks released in 2 days, 18 hours
+          Next flocks released in {diffInDays > 0 && `${diffInDays} days, `}
+          {remainingHours} hours
         </h4>
         <hr className="border-black" />
         <RouteTabs routes={routes} />

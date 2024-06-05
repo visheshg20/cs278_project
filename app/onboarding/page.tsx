@@ -109,11 +109,12 @@ export default function OnboardingPage() {
       return { ...acc, [key]: value };
     }
   }, {});
-  const completedQuestions = Object.values(flattenedObj).filter((entry) => {
-    if (typeof entry === "object") return Object.values(entry).length > 0;
-    if (typeof entry === "number") return entry >= 0;
-    return entry?.length > 0;
-  }).length;
+  const completedQuestions =
+    Object.values(flattenedObj).filter((entry) => {
+      if (typeof entry === "object") return Object.values(entry).length > 0;
+      if (typeof entry === "number") return entry >= 0;
+      return entry?.length > 0;
+    }).length + 1;
 
   const handleQuestionChange = (dir: number) => {
     if (dir > 0) {
