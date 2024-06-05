@@ -32,9 +32,24 @@ export default async function FlocksPage() {
               height={250}
               draggable={false}
             />
-            <div className="absolute top-2 left-2 drop-shadow-sm py-0.5 px-3 text-sm bg-black rounded-full">
-              hello
-            </div>
+            {group.scheduledMeet ? (
+              <div className="absolute top-2 left-2 drop-shadow-sm py-0.5 px-3 text-sm bg-white text-[#8A6697] rounded-full">
+                {new Date(group.scheduledMeet)
+                  .toLocaleString("en-US", {
+                    weekday: "short",
+                    month: "numeric",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                  })
+                  .split(",")
+                  .join(" ")}
+              </div>
+            ) : (
+              <div className="absolute top-2 left-2 drop-shadow-sm py-0.5 px-3 text-sm bg-blue-400 text-white rounded-full">
+                TBD
+              </div>
+            )}
           </div>
           <div className="flex justify-between text-lg pt-1.5">
             {group.groupName}

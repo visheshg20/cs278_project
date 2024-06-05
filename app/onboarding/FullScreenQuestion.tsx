@@ -184,7 +184,7 @@ const FullScreenQuestion: React.FC<FullScreenQuestionProps> = ({
   }
 
   return (
-    <div className="font-poppins text-white h-full shrink-0 flex pt-16 sm:pt-24">
+    <div className="font-poppins text-white h-full shrink-0 flex pt-16 pb-16 sm:pt-24">
       <div className="flex w-full">
         <div className="flex items-center h-fit text-xl gap-2 pr-2">
           {index}
