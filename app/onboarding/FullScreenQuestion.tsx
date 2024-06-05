@@ -16,6 +16,7 @@ interface FullScreenQuestionProps {
   };
   currentFormData?: any;
   index: number;
+  questionChange: (index: number) => void;
   isLast?: boolean;
   value: any;
   onAnswer: (answer: string) => void;
@@ -26,6 +27,7 @@ const FullScreenQuestion: React.FC<FullScreenQuestionProps> = ({
   index,
   onAnswer,
   currentFormData,
+  questionChange,
   value,
   isLast,
 }) => {
@@ -33,7 +35,8 @@ const FullScreenQuestion: React.FC<FullScreenQuestionProps> = ({
   const [error, setError] = useState("");
 
   const handleSubmit = (event?: React.FormEvent) => {
-    if (!question.validation(response)) onAnswer(response);
+    if (question.type === "info") questionChange(1);
+    else if (!question.validation(response)) onAnswer(response);
     else setError(question.validation(response));
   };
 
@@ -81,8 +84,11 @@ const FullScreenQuestion: React.FC<FullScreenQuestionProps> = ({
   } else if (question.type === "radio") {
     inputElem = (
       <div className="text-base flex gap-x-10 gap-y-2 flex-wrap">
-        {question.options?.map((option) => (
-          <label className="relative rounded-lg px-4 py-1.5 bg-gray-400 opacity-100 cursor-pointer text-center">
+        {question.options?.map((option, index) => (
+          <label
+            key={`options-${index}`}
+            className="relative rounded-lg px-4 py-1.5 bg-gray-400 opacity-100 cursor-pointer text-center"
+          >
             <div
               className={cn(
                 response === option && "!opacity-100",
@@ -106,8 +112,9 @@ const FullScreenQuestion: React.FC<FullScreenQuestionProps> = ({
   } else if (question.type === "checkbox") {
     inputElem = (
       <div className="text-base flex gap-x-5 gap-y-3 flex-wrap items-stretch">
-        {question.options?.map((option) => (
+        {question.options?.map((option, index) => (
           <label
+            key={`checkbox-options-${index}`}
             className="relative rounded-lg px-4 py-1.5 bg-gray-400 opacity-100 cursor-pointer text-center"
             onClick={handleCheckboxChange}
           >
@@ -124,6 +131,7 @@ const FullScreenQuestion: React.FC<FullScreenQuestionProps> = ({
                 className="appearance-none"
                 checked={response.includes(option)}
                 value={option}
+                onChange={() => {}}
               />
             </div>
           </label>
@@ -132,29 +140,33 @@ const FullScreenQuestion: React.FC<FullScreenQuestionProps> = ({
     );
   } else if (question.type === "numeric") {
     inputElem = (
-      <div className="text-base flex gap-x-0 gap-y-3 flex-wrap items-stretch">
-        {range(question.range[0], question.range[1] + 1).map((number) => (
-          <label
-            className="relative flex-1 px-4 py-1.5 bg-[rgba(255,255,255,0.3)] border -mr-[1px] border-white opacity-100 cursor-pointer text-center"
-            onClick={handleNumericalChange}
-          >
-            <div
-              className={cn(
-                parseInt(response) === number && "!opacity-100",
-                "opacity-0 transition-all absolute w-full h-full left-0 top-0 !duration-[350ms] cursor-pointer bg-gradient-to-r !from-[#fff700c2] via-30% via-[#FFBF00] !to-[#FF0000]"
-              )}
-            />
-            <div className={cn("relative z-[1]")}>
-              {number}
-              <input
-                type="radio"
-                className="appearance-none"
-                checked={parseInt(response) === number}
-                value={number}
+      <div className="text-base flex gap-x-0 gap-y-3 flex-wrap">
+        {range(question.range[0], question.range[1] + 1).map(
+          (number, index) => (
+            <label
+              className="relative flex-[1_1_25%] sm:flex-1  px-4 py-1.5 bg-[rgba(255,255,255,0.3)] flex items-center justify-center border -mr-[1px] border-white opacity-100 cursor-pointer text-center"
+              onClick={handleNumericalChange}
+              key={`numeric-options-${index}`}
+            >
+              <div
+                className={cn(
+                  parseInt(response) === number && "!opacity-100",
+                  "opacity-0 transition-all absolute w-full h-full left-0 top-0 !duration-[350ms] cursor-pointer bg-gradient-to-r !from-[#fff700c2] via-30% via-[#FFBF00] !to-[#FF0000]"
+                )}
               />
-            </div>
-          </label>
-        ))}
+              <div className={cn("relative z-[1]")}>
+                {number}
+                <input
+                  type="radio"
+                  className="appearance-none"
+                  checked={parseInt(response) === number}
+                  value={number}
+                  onChange={() => {}}
+                />
+              </div>
+            </label>
+          )
+        )}
       </div>
     );
   } else if (question.type === "textarea") {
@@ -188,12 +200,16 @@ const FullScreenQuestion: React.FC<FullScreenQuestionProps> = ({
             )}
             <button
               className={cn(
-                !response || response.length === 0 || response < 0
+                (!response || response.length === 0 || response < 0) &&
+                  question.type !== "info"
                   ? "bg-gray-400"
                   : "bg-purple-500",
                 "text-base py-2 px-4 pr-3 w-fit rounded-md self-end mt-5 flex items-center gap-2"
               )}
-              disabled={!response || response.length === 0 || response < 0}
+              disabled={
+                (!response || response.length === 0 || response < 0) &&
+                question.type !== "info"
+              }
               onClick={handleSubmit}
             >
               {isLast ? (

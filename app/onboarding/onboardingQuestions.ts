@@ -143,7 +143,8 @@ export const questions: {
     field: "excitementLevel",
     type: "numeric",
     table: "Survey",
-    question: "How excited are you to meet IRL?",
+    question:
+      "How excited are you to meet IRL? (1=not excited, 5=very excited)",
     validation: (input: string[]) => {
       return "";
     },
@@ -157,6 +158,17 @@ export const questions: {
       "Give us a little bio about yourself to share with others! (~50 words)",
     validation: (input: string) => {
       return input.length < 25 ? "Tell us just a biiiit more :D" : "";
+    },
+  },
+  {
+    field: "",
+    type: "info",
+    table: "",
+    question: `This next section will ask you to rank the following activities: ${groupActivities.join(
+      ", "
+    )}`,
+    validation: (input: string) => {
+      return "";
     },
   },
 

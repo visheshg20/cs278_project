@@ -189,6 +189,7 @@ export default function OnboardingPage() {
                       ]
                     : formData[questions[questionIndex].field]
                 }
+                questionChange={handleQuestionChange}
                 onAnswer={(answer) => {
                   if (questions[questionIndex].subfield) {
                     setFormData({
@@ -205,7 +206,10 @@ export default function OnboardingPage() {
                     });
                   }
                   handleQuestionChange(1);
-                  if (completedQuestions >= questions.length - 1) {
+                  if (
+                    completedQuestions >= questions.length - 2 &&
+                    questionIndex === questions.length - 1
+                  ) {
                     console.log("Submitting form");
                     handleSubmit();
                   }

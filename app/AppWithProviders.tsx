@@ -5,6 +5,7 @@ import { AuthContext } from "@/app/contexts/AuthContext";
 import Image from "next/image";
 import Link from "next/link";
 import { IconBell, IconHome } from "@tabler/icons-react";
+import { usePathname } from "next/navigation";
 import ProfileImage from "@/components/ProfileImage";
 import LogoutButton from "@/components/LogoutButton";
 import LinkButton from "@/components/LinkButton";
@@ -18,10 +19,10 @@ export default function AppWithProviders({
 }) {
   const { session, user } = useContext(AuthContext);
 
-  const path = new URL(headerURL ?? "").pathname;
+  const pathname = usePathname();
 
   const NavRight = () => {
-    if (session && path !== "/onboarding" && path !== "/survey") {
+    if (session && pathname !== "/onboarding") {
       return (
         <div className="h-full flex justify-center items-center gap-4 px-4">
           <Link href="/home" className="w-8 h-8">
