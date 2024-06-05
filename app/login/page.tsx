@@ -25,7 +25,7 @@ export default function Login({
       return redirect("/login?message=Could not authenticate user");
     }
 
-    return redirect("/home");
+    return redirect("/onboarding");
   };
 
   const signUp = async (formData: FormData) => {
@@ -45,37 +45,39 @@ export default function Login({
       return redirect("/login?message=Email is invalid");
     }
 
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${origin}/auth/callback`,
-      },
-    });
+    console.log(origin);
 
-    if (authError ?? !authData.user) {
-      console.error(authError);
-      return redirect("/login?message=Could not authenticate user");
-    }
+    // const { data: authData, error: authError } = await supabase.auth.signUp({
+    //   email,
+    //   password,
+    //   options: {
+    //     emailRedirectTo: `${origin}/auth/callback`,
+    //   },
+    // });
 
-    const { error: userCreationError } = await supabase.from("Users").insert({
-      uid: authData.user.id,
-      email: email,
-      firstName: null,
-      lastName: null,
-      prefName: null,
-      studentStatus: null,
-      groups: null,
-      status: 0,
-      school: "Stanford University",
-    });
+    // if (authError ?? !authData.user) {
+    //   console.error(authError);
+    //   return redirect("/login?message=Could not authenticate user");
+    // }
 
-    if (userCreationError) {
-      console.error(userCreationError);
-      return redirect("/login?message=Could not create new user");
-    }
+    // const { error: userCreationError } = await supabase.from("Users").insert({
+    //   uid: authData.user.id,
+    //   email: email,
+    //   firstName: null,
+    //   lastName: null,
+    //   prefName: null,
+    //   studentStatus: null,
+    //   groups: null,
+    //   status: 0,
+    //   school: "Stanford University",
+    // });
 
-    return redirect("/login?message=Check email to continue sign in process");
+    // if (userCreationError) {
+    //   console.log(userCreationError);
+    //   return redirect("/login?message=Could not create new user");
+    // }
+
+    // return redirect("/login?message=Check email to continue sign in process");
   };
 
   return (
