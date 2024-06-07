@@ -6,7 +6,7 @@ import Image from "next/image";
 import { AuthContext } from "@/app/contexts/AuthContext";
 import ChatTextBar from "@/app/chat/ChatTextBar";
 import GroupChatMessages from "@/app/chat/GroupChatMessages";
-import { cn, isIOS } from "@/utils";
+import { cn, getNextWednesdayAt6PM, isIOS } from "@/utils";
 import {
   serverGetDMById,
   serverGetUserByUid,
@@ -52,6 +52,12 @@ export default function ChatPage({
     if (user) getData();
   }, [user]);
 
+  const nextRelease = getNextWednesdayAt6PM();
+  const now = new Date();
+  const diffInHours = (nextRelease - now) / 1000 / 60 / 60;
+  const diffInDays = Math.floor(diffInHours / 24);
+  const remainingHours = Math.floor(diffInHours % 24);
+
   if (!groupData || !user) return null;
   return (
     <div className="flex-1 w-full sm:w-4/5 animate-in opacity-0 flex flex-col gap-3 px-0 relative">
@@ -85,7 +91,11 @@ export default function ChatPage({
           </h2>
         ) : (
           <div>
-            <h2 className="text-white text-2xl">{groupData.groupName}</h2>
+            <h2 className="text-white text-2xl">
+              {groupData.groupName} -{" "}
+              {diffInDays > 0 &&
+                `${diffInDays} days ${remainingHours} hrs left`}
+            </h2>
             <p className="text-xs text-gray-500">
               use /schedule to let us know you’ve scheduled a meet and the timer
               will stop!

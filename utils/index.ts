@@ -18,9 +18,9 @@ export function getNextWednesdayAt6PM() {
   let daysUntilNextWednesday = (3 - dayOfWeek + 7) % 7;
 
   // If today is Wednesday and the current time is before 6 PM
-  if (dayOfWeek === 3 && now.getHours() < 23) {
+  if (dayOfWeek === 3 && now.getHours() < 18) {
     daysUntilNextWednesday = 0;
-  } else if (dayOfWeek === 3 && now.getHours() >= 23) {
+  } else if (dayOfWeek === 3 && now.getHours() >= 18) {
     // If today is Wednesday and the current time is after 6 PM, set to next Wednesday
     daysUntilNextWednesday = 7;
   } else if (daysUntilNextWednesday === 0) {
@@ -29,7 +29,7 @@ export function getNextWednesdayAt6PM() {
   }
 
   nextWednesday.setDate(now.getDate() + daysUntilNextWednesday);
-  nextWednesday.setHours(23, 0, 0, 0); // Set to 6:00 PM
+  nextWednesday.setHours(18, 0, 0, 0); // Set to 6:00 PM
 
   return nextWednesday;
 }

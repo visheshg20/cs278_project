@@ -51,7 +51,7 @@ export default async function FlocksPage() {
               </div>
             )}
           </div>
-          <div className="flex justify-between text-lg pt-1.5">
+          <div className="flex max-w-[250px] justify-between text-lg pt-1.5">
             {group.groupName}
             <div className="flex">
               {group.members

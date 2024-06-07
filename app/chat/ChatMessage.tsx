@@ -84,6 +84,9 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
           </h1>
           <Image src="/icebreaker.png" alt="" width={100} height={100} />
           <p className="text-sm text-[#8A6697] pt-1">{chat.message}</p>
+          <p className="text-sm text-[#8A6697]">
+            Type /icebreaker to generate another icebreaker!
+          </p>
         </div>
       );
     }

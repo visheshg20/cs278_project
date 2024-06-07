@@ -21,6 +21,7 @@ export default function RenderIOS({
     if (!isIOS()) return children;
     return (
       <div
+        suppressHydrationWarning
         className={cn(
           isViewingChat ? "hidden" : "flex",
           "flex-1 min-h-full relative flex-col max-w-[350px]"
