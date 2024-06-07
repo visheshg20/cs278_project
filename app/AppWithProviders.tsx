@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import ProfileImage from "@/components/ProfileImage";
 import LogoutButton from "@/components/LogoutButton";
 import LinkButton from "@/components/LinkButton";
+import { ModalContext } from "@/app/contexts/ModalContext";
 
 export default function AppWithProviders({
   children,
@@ -18,6 +19,7 @@ export default function AppWithProviders({
   headerURL: string | null;
 }) {
   const { session, user } = useContext(AuthContext);
+  const { showModal, modalContent } = useContext(ModalContext);
 
   const pathname = usePathname();
 
@@ -77,6 +79,7 @@ export default function AppWithProviders({
         </div>
         {children}
       </main>
+      {showModal && modalContent}
     </body>
   );
 }

@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 
 import { AuthProvider } from "@/app/contexts/AuthContext";
 import AppWithProviders from "@/app/AppWithProviders";
+import { ModalProvider } from "./contexts/ModalContext";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -35,7 +36,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn(poppins.variable, GeistSans.className)}>
       <AuthProvider>
-        <AppWithProviders headerURL={headerURL}> {children}</AppWithProviders>
+        <ModalProvider>
+          <AppWithProviders headerURL={headerURL}> {children}</AppWithProviders>
+        </ModalProvider>
       </AuthProvider>
     </html>
   );

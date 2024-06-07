@@ -7,6 +7,9 @@ import { AuthContext } from "@/app/contexts/AuthContext";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import { padZero } from "@/utils";
+import { ModalContext } from "@/app/contexts/ModalContext";
+import { set } from "lodash";
+import { serverFlagChat } from "@/app/actions";
 
 interface ChatMessageProps {
   chat: any;
@@ -29,9 +32,61 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
 }) => {
   const [showOptions, setShowOptions] = useState<boolean>(false);
   const [showReactions, setShowReactions] = useState<boolean>(false);
+
+  const { setShowModal, setModalContent } = useContext(ModalContext);
   const reactionRef = useRef<HTMLButtonElement>(null);
   const { user } = useContext(AuthContext);
   const supabase = createClient();
+
+  const updateModal = () => {
+    setShowModal(true);
+    setModalContent(
+      <>
+        <div
+          className="fixed flex items-center justify-center bottom-0 right-0 h-screen w-screen z-10 animate-in inset-0 bg-[rgba(0,0,0,0.5)]"
+          onClick={() => {
+            setShowModal(false);
+          }}
+        >
+          <div
+            className="max-w-[80vw] sm:max-w-[60vw] animate-in bg-white z-[50] rounded-xl relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="absolute right-4 top-4"
+              onClick={() => {
+                setModalContent(null);
+                setShowModal(false);
+              }}
+            >
+              <Image alt="" src="/gray_close.svg" height={20} width={20} />
+            </button>
+            <div className="flex items-center justify-center">
+              <div className="bg-white rounded-lg p-4">
+                <h1 className="text-2xl font-semibold">Report Message</h1>
+                <p className="text-sm text-gray-500">
+                  Are you sure you want to report this message? This will hide
+                  the message until a moderator approves it.
+                </p>
+                <div className="flex gap-4 mt-4">
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                    onClick={async () => {
+                      await serverFlagChat(chat.cid);
+                      setModalContent(null);
+                      setShowModal(false);
+                    }}
+                  >
+                    Report
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  };
 
   const renderSpecialChat = (chat: any) => {
     if (chat.special === "schedule") {
@@ -227,7 +282,11 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
               "px-3 py-1 text-white rounded-2xl text-md max-w-[70%] relative "
             )}
           >
-            {chat.message}
+            {chat.userFlagged || chat.moderatorFlagged ? (
+              <em>This message has been flagged for review.</em>
+            ) : (
+              chat.message
+            )}
             {reactions.length > 0 && (
               <div
                 className={cn(
@@ -283,6 +342,15 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
                 }}
               >
                 <Image src="/reply.svg" alt="" width={20} height={20} />
+              </button>
+              <button
+                className="hover:bg-[rgba(255,255,255,0.7)] rounded-full p-1"
+                onClick={(e) => {
+                  e.preventDefault();
+                  updateModal();
+                }}
+              >
+                <Image src="/flag.svg" alt="" width={20} height={20} />
               </button>
             </div>
           )}

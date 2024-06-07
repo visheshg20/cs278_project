@@ -307,3 +307,13 @@ export const serverGetUserAndSurveyByUid = async (uid: string) => {
   if (userData) return userData;
   else return { error: error };
 };
+
+export const serverFlagChat = async (cid: string) => {
+  const supabase = createClient();
+  const { error } = await supabase
+    .from("Chats")
+    .update({ userFlagged: true })
+    .eq("cid", cid);
+
+  return { error: error ?? null };
+};
