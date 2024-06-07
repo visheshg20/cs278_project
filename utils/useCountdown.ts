@@ -8,13 +8,13 @@ export default function useCountdownTimer(countdownTo: string) {
     let timeDelta = Math.floor(
       (Date.parse(countdownTo) - new Date().getTime()) / 1000
     );
-    if (timeDelta < SECONDS_PER_DAY && timeDelta >= 0) {
+    if (timeDelta >= 0) {
       const interval = setInterval(() => {
         let timeDiff = Math.floor(
           (Date.parse(countdownTo) - new Date().getTime()) / 1000
         );
         if (timeDiff < 0) {
-          setCountdownTimer("expired");
+          setCountdownTimer("");
         } else {
           const diffSeconds = Math.floor(timeDiff) % 60;
           const diffMinutes = Math.floor(timeDiff / 60) % 60;
@@ -28,7 +28,7 @@ export default function useCountdownTimer(countdownTo: string) {
       return () => {
         clearInterval(interval);
       };
-    } else if (timeDelta < 0) setCountdownTimer("expired");
+    } else if (timeDelta < 0) setCountdownTimer("");
   }, [countdownTo]);
 
   return countdownTimer;
