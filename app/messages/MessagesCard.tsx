@@ -19,16 +19,15 @@ interface MessagesCardProps {
 const MessagesCard: React.FC<MessagesCardProps> = ({ group }) => {
   const [membersData, setMembersData] = useState(null);
   useEffect(() => {
-    const fetchMembersData = async () => {
-      if (group.type === "group") {
-        const membersData = await serverGetGroupMembersData(group.gid);
-        setMembersData(membersData);
-      } else if (group.type === "dm") {
-        const membersData = await serverGetUserByUid(group.user);
-        setMembersData(membersData);
-      }
-    };
-    fetchMembersData();
+    if (group.type === "group") {
+      serverGetGroupMembersData(group.gid).then((membersData) =>
+        setMembersData(membersData)
+      );
+    } else if (group.type === "dm") {
+      serverGetUserByUid(group.user).then((membersData) =>
+        setMembersData(membersData)
+      );
+    }
   }, []);
   const convoId = usePathname().split("/").splice(-1)[0];
   const isViewingChat = convoId !== "messages";

@@ -13,8 +13,10 @@ export default async function MessagesLayoutNOSSR({
   children: React.ReactNode;
 }) {
   const user = await serverGetUser();
-  const groupsData = await serverGetGroupsByIds(user.groups);
-  const DMData = await serverGetDMsByUser(user.uid);
+  const AWAIT_groupsData = serverGetGroupsByIds(user.groups);
+  const AWAIT_DMData = serverGetDMsByUser(user.uid);
+  const groupsData = await AWAIT_groupsData;
+  const DMData = await AWAIT_DMData;
 
   if (groupsData.error || DMData.error) return <div></div>;
 
